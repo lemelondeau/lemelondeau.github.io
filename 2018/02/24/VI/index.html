@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="en">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/duola.jpg?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/duola.jpg?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/duola.jpg?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="algorithms," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="1. Understanding Variational InferenceI had a difficult time understanding what does the phrase Variational Inference mean. First, let’s see what is inference. It refers to statistical inference which">
+<meta name="keywords" content="algorithms">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Variational Inference">
+<meta property="og:url" content="https://lemelondeau.github.io/2018/02/24/VI/index.html">
+<meta property="og:site_name" content="Cool Site">
+<meta property="og:description" content="1. Understanding Variational InferenceI had a difficult time understanding what does the phrase Variational Inference mean. First, let’s see what is inference. It refers to statistical inference which">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2018-02-24T07:15:45.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Variational Inference">
+<meta name="twitter:description" content="1. Understanding Variational InferenceI had a difficult time understanding what does the phrase Variational Inference mean. First, let’s see what is inference. It refers to statistical inference which">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://lemelondeau.github.io/2018/02/24/VI/"/>
+
+
+
+
+
+  <title>Variational Inference | Cool Site</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-80781234-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?//hm.baidu.com/hm.js?ee75cf111111aa99f8540efa2570970";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Cool Site</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://lemelondeau.github.io/2018/02/24/VI/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="lemelondeau">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/duola.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cool Site">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Variational Inference</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-02-24T11:48:47+08:00">
+                2018-02-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/02/24/VI/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/02/24/VI/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="1-Understanding-Variational-Inference"><a href="#1-Understanding-Variational-Inference" class="headerlink" title="1. Understanding Variational Inference"></a>1. Understanding Variational Inference</h2><p>I had a difficult time understanding what does the phrase <em>Variational Inference</em> mean. First, let’s see what is <em>inference</em>. It refers to <em>statistical inference</em> which means to estimate or <strong>infer</strong> the parameters/hidden variables of a statistical model. For example, estimating the weights in linear regression. In general, there are two different statistical inference methods, namely <em>Frequentist method</em> and <em>Bayesian inference</em>. Still use the linear regression as an example, frequentist method will give a estimated value for each weight while the Bayesian inference will produce a distribution over the weights. What is going to be used in variational inference is Bayesian inference, where posterior distribution is derived by the Bayes’ rule.</p>
+<p>What does <em>variational</em> refer to? Variation is a concept in <em>functional</em> ( mappings from a set of functions to the real numbers. It’s to find a function which minimise or maximise the functional. If we want to get the optima of a function, usually we can take the derivative, which is called differential. Similarly, if we take the derivative of a functional, it is called variational.</p>
+<p>As we know, posterior distribution is notoriously intractable. In variational inference, we aim to find an approximation to it. During this process, a functional is maximised, where the input of the optima is the approximation mentioned just now.</p>
+<h2 id="2-Tackle-Posterior-with-Variational-Inference"><a href="#2-Tackle-Posterior-with-Variational-Inference" class="headerlink" title="2. Tackle Posterior with Variational Inference"></a>2. Tackle Posterior with Variational Inference</h2><h3 id="2-1-Problem-Formalisation"><a href="#2-1-Problem-Formalisation" class="headerlink" title="2.1 Problem Formalisation"></a>2.1 Problem Formalisation</h3><p>Suppose we have observations $X$ and latent random variables $Z$. Here, the latent random variables include the parameters of model and the latent variables whose counterparts are the observations. We are going to compute $P(Z|X)$, the posterior which is</p>
+<script type="math/tex; mode=display">
+p(\mathbf{Z}|\mathbf{X})=\frac{p(\mathbf{X}|\mathbf{Z})p(\mathbf{Z})}{\int p(\mathbf{X},\mathbf{Z})p(\mathbf{Z}) d\mathbf Z}</script><p>However, for many models, the denominator may not have a closed-form solution and the latent variable might be high dimensional. Therefore, we want to find an approximation $q(\mathbf{Z})$ of $p(\mathbf{Z}|\mathbf{X})$, such that $KL(q||p)$ is minimised. We assume $q(Z)$ a Gaussian distribution.</p>
+<script type="math/tex; mode=display">
+\begin{align}
+KL(q||p) &=KL(q(\mathbf{Z})||p(\mathbf Z|\mathbf X)) \\ 
+&=\int q(\mathbf Z)\log \frac{q(\mathbf Z)}{p(\mathbf Z|\mathbf X)} d\mathbf Z\\
+&=\int q(\mathbf Z) \log \frac{q(\mathbf Z)p(\mathbf X)}{p(\mathbf {X},\mathbf{Z})}d \mathbf Z\\
+&=\int q(\mathbf Z)[\log q(\mathbf Z)+\log p(\mathbf X)-\log p(\mathbf  X, \mathbf  Z)] d \mathbf Z\\
+&=\int q(\mathbf  Z)[\log q(\mathbf Z)-\log p(\mathbf X,\mathbf Z)]d \mathbf Z+\log p(\mathbf X)
+
+\end{align}  \qquad(1)</script><h3 id="2-2-The-evidence-lower-bound-ELBO"><a href="#2-2-The-evidence-lower-bound-ELBO" class="headerlink" title="2.2 The evidence lower bound(ELBO)"></a>2.2 The evidence lower bound(ELBO)</h3><p>Rearrange the above equation (1), we get</p>
+<script type="math/tex; mode=display">
+\log p(\mathbf X)=KL(q||p)-\int q(\mathbf  Z)[\log q(\mathbf Z)-\log p(\mathbf X,\mathbf Z)]d \mathbf Z</script><p>That is </p>
+<script type="math/tex; mode=display">
+\log p(\mathbf X)=KL(q||p)+E_{q(\mathbf Z)}[\log p(\mathbf X, \mathbf Z)-\log q(\mathbf Z)]</script><p>Since $KL(q||p)\geq 0$ and $\log p(\mathbf X)$ is a constant, then minimizing $KL(q||p)$ is equivalent to maximizing the second term. Also, the second term is called the <em>evidence lower bound (ELBO)</em>:</p>
+<script type="math/tex; mode=display">
+\mathcal L(p)=\int q(\mathbf Z)\log \frac {p(\mathbf X, \mathbf Z)}{q(\mathbf Z)} d \mathbf Z \qquad\qquad\qquad(2)</script><p>This is the <strong>functional</strong> we want to maximise.</p>
+<blockquote>
+<p>The first term is an expected likelihood; it encourages densities that place their mass on configurations of the latent variables that explain the observed data. The second term is the negative divergence between the variational density and the prior; it encourages densities close to the prior. Thus the variational objective mirrors the usual balance between likelihood and prior. [5]</p>
+</blockquote>
+<p>The lower bound can also be obtained by applying Jensen’s inequality:</p>
+<script type="math/tex; mode=display">
+\begin{align}
+\log p(\mathbf{X})&=\log\int p(\mathbf X, \mathbf Z) d \mathbf{Z}\\
+&=\log \int p(\mathbf X,\mathbf Z)\frac{q(\mathbf Z)}{q(\mathbf Z)} d \mathbf Z\\
+&=\log (E_q\left[ \frac{p(\mathbf X,\mathbf Z)}{q(\mathbf Z)}\right])
+\\
+&\geq E_q\left[\log p(\mathbf X,\mathbf Z)-q(\mathbf Z)\right]\\
+&=\int q(\mathbf Z)\log \frac {p(\mathbf X, \mathbf Z)}{q(\mathbf Z)} d \mathbf Z
+\end{align}</script><h3 id="2-3-Maximising-the-ELBO-and-Get-the-Approximation"><a href="#2-3-Maximising-the-ELBO-and-Get-the-Approximation" class="headerlink" title="2.3 Maximising the ELBO and Get the Approximation"></a>2.3 Maximising the ELBO and Get the Approximation</h3><p>We consider a restricted family of distributions $q(\mathbf Z)$ and then seek the member of this family for which the KL divergence is minimized. Our goal is to restrict the family sufﬁciently that they comprise only tractable distributions, while at the same time allowing the family to be sufﬁciently rich and ﬂexible that it can provide a good approximation to the true posterior distribution [1].</p>
+<h4 id="2-3-1-Mean-field-variational-inference"><a href="#2-3-1-Mean-field-variational-inference" class="headerlink" title="2.3.1 Mean field variational inference"></a>2.3.1 Mean field variational inference</h4><p>Partition the elements of $\mathbf Z$ into disjoint groups $\mathbf Z_i$ where $i=1,2,…M$. Then the factorization of $q$ is</p>
+<script type="math/tex; mode=display">
+q(\mathbf Z)=\prod_{i=1}^M q_i(\mathbf Z_i)</script><p>Then the ELBO can be refactorized as</p>
+<script type="math/tex; mode=display">
+\begin{align}
+\mathcal L&=\int q(\mathbf Z) \log p(\mathbf X, \mathbf Z)d \mathbf Z-\int q(\mathbf Z) \sum_i\log q_i d\mathbf Z\\
+&=\int q(\mathbf Z) \log[p(\mathbf X)\prod_i p(\mathbf Z_i|\mathbf Z_{1:i-1},\mathbf X)]d\mathbf Z-\int q(\mathbf Z) \sum_i\log q_i d\mathbf Z\\
+&=\log p(\mathbf X)+\int q(\mathbf Z) \log[\prod_ip(\mathbf Z_i|\mathbf Z_{1:i-1},\mathbf X)]d\mathbf Z-\int q(\mathbf Z) \sum_i\log q_i d\mathbf Z\\
+&=\log p(\mathbf X)+\int q(\mathbf Z) \sum_i\log[p(\mathbf Z_i|\mathbf Z_{1:i-1},\mathbf X)]d\mathbf Z-\int q(\mathbf Z) \sum_i\log q_i d\mathbf Z\\
+\end{align} \qquad(3)</script><p>Consider the partitions $\mathbf Z={\mathbf Z_j, \overline{\mathbf Zj}}$ where $ \overline{\mathbf Zj}=\mathbf Z\setminus \mathbf Z_j $.</p>
+<script type="math/tex; mode=display">
+\begin{align}
+\int q(\mathbf Z)\sum_i \log q_i d\mathbf Z&=\int \prod_i q_i\sum_i\log q_i d\mathbf Z\\
+&=\sum_i \int \left( \prod_i q_i\right)\log q_i d\mathbf Z\\
+&=\sum_i \int \int q_j \overline{q_j} \log q_i d\mathbf Z_j d\mathbf {\overline{\mathbf Z}}_ j
+\end{align}</script><p>Let $i=j$, then the above formula</p>
+<script type="math/tex; mode=display">
+\begin{align}
+&=\sum_i \int \int q_i \overline{q_i} \log q_i d\mathbf Z_i d\mathbf {\overline{\mathbf Z}}_i\\
+&=\sum_i \int \log q_i d\mathbf Z_i \\
+\end{align}</script><p>Similarly,</p>
+<script type="math/tex; mode=display">
+\begin{align}
+\int q(\mathbf Z) \sum_i\log[p(\mathbf Z_i|\mathbf Z_{1:i-1},\mathbf X)]d\mathbf Z&=\int \int q_i \overline{q_i}\sum_i\log[p(\mathbf Z_i|\mathbf Z_{1:i-1},\mathbf X)]d\mathbf Z_id\overline{\mathbf Z_i}\\
+&=\sum_i \int \int q_i \overline{q_i}\log[p(\mathbf Z_i|\mathbf Z_{1:i-1},\mathbf X)]d\mathbf Z_id\overline{\mathbf Z_i}\\
+&=\sum_i \int \left(\int \overline{q_i}\log[p(\mathbf Z_i|\mathbf Z_{1:i-1},\mathbf X)]d\overline{\mathbf Z_i}\right) q_i d\mathbf Z_i\\
+&=\sum_i E_i\left[E_{-i}[\log p(\mathbf Z_i|\mathbf Z_{1:i-1},\mathbf X)]\right]\\
+&=\sum_i E[\log p(\mathbf Z_i|\mathbf Z_{1:i-1},\mathbf X)]
+\end{align}</script><p>So we can get</p>
+<script type="math/tex; mode=display">
+\mathcal L=\log p(\mathbf X)+\sum_i E[\log p(\mathbf Z_i|\mathbf Z_{1:i-1},\mathbf X)]-\sum_i \int \log q_i d\mathbf Z_i \\</script><h4 id="2-3-2-Coordinate-Ascent"><a href="#2-3-2-Coordinate-Ascent" class="headerlink" title="2.3.2 Coordinate Ascent"></a>2.3.2 Coordinate Ascent</h4><p>Now we fix all the elements in $\mathbf Z$ except for $\mathbf Z_j$ whose is the last variable in the above chain rule list.</p>
+<p>Write the objective as a function of $q_j$</p>
+<script type="math/tex; mode=display">
+\mathcal L_j=\int q_j E_{-j}[\log p(\mathbf Z_i|\mathbf Z_{-j},\mathbf X)]d\mathbf Z_j-\int q_j\log q_j d\mathbf Z_j+ \text {const}</script><p>Take the derivative of $\mathcal L_j$ (<strong>variational</strong>),</p>
+<script type="math/tex; mode=display">
+\frac{\mathcal L_j}{d q_j}=E_{-j}[\log p(\mathbf Z_i|\mathbf Z_{-j},\mathbf X)]- \log q_j-1=0</script><script type="math/tex; mode=display">
+q_j^* \propto \exp\left\{E_{-j}[\log p(\mathbf Z_j|\mathbf Z_{-j}, \mathbf X)]\right\}</script><p>the denominator of the posterior does not depend the $\mathbf Z_j$, so</p>
+<script type="math/tex; mode=display">
+q_j^* \propto \exp\left\{E_{-j}[\log p(\mathbf Z_j,\mathbf Z_{-j}, \mathbf X)]\right\}</script><p>Update $q_j$ iteratively until the convergence of ELBO.</p>
+<h2 id="3-Variational-Inference-vs-MCMC"><a href="#3-Variational-Inference-vs-MCMC" class="headerlink" title="3. Variational Inference vs MCMC"></a>3. Variational Inference vs MCMC</h2><blockquote>
+<p>MCMC methods tend to be more computationally intensive than variational inference but they also provide guarantees of producing (asymptotically) exact samples from the target density (Robert and Casella, 2004). Variational inference does not enjoy such guarantees—it can only find a density close to the target—but tends to be faster than MCMC. Thus, variational inference is suited to large data sets and scenarios where we want to quickly explore many models; MCMC is suited to smaller data sets and scenarios where we happily pay a heavier computational cost for more precise samples. [5]</p>
+</blockquote>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p>[1] Bishop, C. M. (2006). <em>Pattern recognition and machine learning</em>. springer.</p>
+<p>[2] <a href="https://benmoran.wordpress.com/2015/02/21/variational-bayes-and-the-evidence-lower-bound/" target="_blank" rel="external">https://benmoran.wordpress.com/2015/02/21/variational-bayes-and-the-evidence-lower-bound/</a></p>
+<p>[3] <a href="https://www.cs.princeton.edu/courses/archive/fall11/cos597C/lectures/variational-inference-i.pdf" target="_blank" rel="external">https://www.cs.princeton.edu/courses/archive/fall11/cos597C/lectures/variational-inference-i.pdf</a></p>
+<p>[4] Fox, C. W., &amp; Roberts, S. J. (2012). A tutorial on variational Bayesian inference. <em>Artificial intelligence review</em>, 1-11.</p>
+<p>[5] Blei, D. M., Kucukelbir, A., &amp; McAuliffe, J. D. (2017). Variational inference: A review for statisticians. <em>Journal of the American Statistical Association</em>, <em>112</em>(518), 859-877.</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/algorithms/" rel="tag"># algorithms</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/02/10/mcmc/" rel="next" title="Monte Carlo Sampling">
+                <i class="fa fa-chevron-left"></i> Monte Carlo Sampling
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/duola.jpg"
+                alt="lemelondeau" />
+            
+              <p class="site-author-name" itemprop="name">lemelondeau</p>
+              <p class="site-description motion-element" itemprop="description">J'aime le melon d'eau.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/lemelondeau" target="_blank" title="github">
+                    
+                      <i class="fa fa-fw fa-globe"></i>github</a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Understanding-Variational-Inference"><span class="nav-number">1.</span> <span class="nav-text">1. Understanding Variational Inference</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Tackle-Posterior-with-Variational-Inference"><span class="nav-number">2.</span> <span class="nav-text">2. Tackle Posterior with Variational Inference</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-Problem-Formalisation"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 Problem Formalisation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-The-evidence-lower-bound-ELBO"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 The evidence lower bound(ELBO)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-Maximising-the-ELBO-and-Get-the-Approximation"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 Maximising the ELBO and Get the Approximation</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-1-Mean-field-variational-inference"><span class="nav-number">2.3.1.</span> <span class="nav-text">2.3.1 Mean field variational inference</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-2-Coordinate-Ascent"><span class="nav-number">2.3.2.</span> <span class="nav-text">2.3.2 Coordinate Ascent</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Variational-Inference-vs-MCMC"><span class="nav-number">3.</span> <span class="nav-text">3. Variational Inference vs MCMC</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#References"><span class="nav-number">4.</span> <span class="nav-text">References</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lemelondeau</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.3</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://lemelondeau.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://lemelondeau.github.io/2018/02/24/VI/';
+          this.page.identifier = '2018/02/24/VI/';
+          this.page.title = 'Variational Inference';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://lemelondeau.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="Cool Site">
 <meta property="og:description" content="1. Understanding Variational InferenceI had a difficult time understanding what does the phrase Variational Inference mean. First, let’s see what is inference. It refers to statistical inference which">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2018-02-24T07:15:45.000Z">
+<meta property="og:updated_time" content="2018-03-17T14:59:26.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Variational Inference">
 <meta name="twitter:description" content="1. Understanding Variational InferenceI had a difficult time understanding what does the phrase Variational Inference mean. First, let’s see what is inference. It refers to statistical inference which">
@@ -415,7 +415,7 @@ q(\mathbf Z)=\prod_{i=1}^M q_i(\mathbf Z_i)</script><p>Then the ELBO can be refa
 \end{align}</script><p>So we can get</p>
 <script type="math/tex; mode=display">
 \mathcal L=\log p(\mathbf X)+\sum_i E[\log p(\mathbf Z_i|\mathbf Z_{1:i-1},\mathbf X)]-\sum_i \int \log q_i d\mathbf Z_i \\</script><h4 id="2-3-2-Coordinate-Ascent"><a href="#2-3-2-Coordinate-Ascent" class="headerlink" title="2.3.2 Coordinate Ascent"></a>2.3.2 Coordinate Ascent</h4><p>Now we fix all the elements in $\mathbf Z$ except for $\mathbf Z_j$ whose is the last variable in the above chain rule list.</p>
-<p>Write the objective as a function of $q_j$</p>
+<p>Write the objective as a function of $q_j=q(\mathbf Z_j)$</p>
 <script type="math/tex; mode=display">
 \mathcal L_j=\int q_j E_{-j}[\log p(\mathbf Z_i|\mathbf Z_{-j},\mathbf X)]d\mathbf Z_j-\int q_j\log q_j d\mathbf Z_j+ \text {const}</script><p>Take the derivative of $\mathcal L_j$ (<strong>variational</strong>),</p>
 <script type="math/tex; mode=display">
@@ -470,6 +470,10 @@ q_j^* \propto \exp\left\{E_{-j}[\log p(\mathbf Z_j,\mathbf Z_{-j}, \mathbf X)]\r
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/03/17/EM/" rel="prev" title="The EM algorithm">
+                The EM algorithm <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -560,7 +564,7 @@ q_j^* \propto \exp\left\{E_{-j}[\log p(\mathbf Z_j,\mathbf Z_{-j}, \mathbf X)]\r
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-count">5</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>

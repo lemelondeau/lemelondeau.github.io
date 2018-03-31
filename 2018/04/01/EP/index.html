@@ -79,18 +79,20 @@
 
 
 
-<meta name="description" content="1. Gradient DescentGradient descent is one of the methods for optimisation, especially when the objective function is convex.   Gradient The first question is, what is gradient? In mathematics, the gr">
+<meta name="description" content="Notes of PRML Expectation propagation (EP) is another deterministic approximate inference method besides variational inference (VI). The different between them is one minimises $KL(p||q)$ while anothe">
 <meta name="keywords" content="algorithms">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Stochastic Gradient Descent">
-<meta property="og:url" content="https://lemelondeau.github.io/2018/01/28/SGD/index.html">
+<meta property="og:title" content="Expectation Propagation">
+<meta property="og:url" content="https://lemelondeau.github.io/2018/04/01/EP/index.html">
 <meta property="og:site_name" content="Cool Site">
-<meta property="og:description" content="1. Gradient DescentGradient descent is one of the methods for optimisation, especially when the objective function is convex.   Gradient The first question is, what is gradient? In mathematics, the gr">
+<meta property="og:description" content="Notes of PRML Expectation propagation (EP) is another deterministic approximate inference method besides variational inference (VI). The different between them is one minimises $KL(p||q)$ while anothe">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2018-02-10T15:09:52.000Z">
+<meta property="og:image" content="https://github.com/lemelondeau/notes/blob/master/others/KL.png">
+<meta property="og:updated_time" content="2018-03-31T17:18:27.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Stochastic Gradient Descent">
-<meta name="twitter:description" content="1. Gradient DescentGradient descent is one of the methods for optimisation, especially when the objective function is convex.   Gradient The first question is, what is gradient? In mathematics, the gr">
+<meta name="twitter:title" content="Expectation Propagation">
+<meta name="twitter:description" content="Notes of PRML Expectation propagation (EP) is another deterministic approximate inference method besides variational inference (VI). The different between them is one minimises $KL(p||q)$ while anothe">
+<meta name="twitter:image" content="https://github.com/lemelondeau/notes/blob/master/others/KL.png">
 
 
 
@@ -120,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="https://lemelondeau.github.io/2018/01/28/SGD/"/>
+  <link rel="canonical" href="https://lemelondeau.github.io/2018/04/01/EP/"/>
 
 
 
 
 
-  <title>Stochastic Gradient Descent | Cool Site</title>
+  <title>Expectation Propagation | Cool Site</title>
   
 
 
@@ -272,7 +274,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://lemelondeau.github.io/2018/01/28/SGD/">
+    <link itemprop="mainEntityOfPage" href="https://lemelondeau.github.io/2018/04/01/EP/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="lemelondeau">
@@ -289,7 +291,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Stochastic Gradient Descent</h1>
+          <h1 class="post-title" itemprop="name headline">Expectation Propagation</h1>
         
 
         <div class="post-meta">
@@ -301,8 +303,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-01-28T16:49:36+08:00">
-                2018-01-28
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-04-01T14:07:08+08:00">
+                2018-04-01
               </time>
             
 
@@ -320,9 +322,9 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/01/28/SGD/#comments" itemprop="discussionUrl">
+                <a href="/2018/04/01/EP/#comments" itemprop="discussionUrl">
                   <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/01/28/SGD/" itemprop="commentCount"></span>
+                        data-disqus-identifier="2018/04/01/EP/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -350,39 +352,65 @@
       
 
       
-        <h2 id="1-Gradient-Descent"><a href="#1-Gradient-Descent" class="headerlink" title="1. Gradient Descent"></a>1. Gradient Descent</h2><p>Gradient descent is one of the methods for optimisation, especially when the objective function is convex. </p>
-<ul>
-<li><p>Gradient</p>
-<p>The first question is, what is <strong>gradient</strong>? In mathematics, the gradient is a multivariate generalization of the derivative. </p>
-<p>For a multivariate function $\varphi(x, y, z)$, the gradient can be written as the coordination form:</p>
+        <p><strong><em>Notes of PRML</em></strong></p>
+<p>Expectation propagation (EP) is another deterministic approximate inference method besides variational inference (VI). The different between them is one minimises $KL(p||q)$ while another minimises $KL(q||p)$.</p>
+<h2 id="1-KL-divergence"><a href="#1-KL-divergence" class="headerlink" title="1.KL divergence"></a>1.KL divergence</h2><script type="math/tex; mode=display">
+KL(p||q)=\int p(x)\log \frac{p(x)}{q(x)}\text{d}(x)</script><p>Where $p$ is the real distribution and $q$ is the approximation we want to find.  If we want to minimise $KL(p||q)$, we need to make sure when $p(x)$ is large, $q(x)$ also need to be large ($q(x)$ is non-zero when $p(x)$ is non-zero). On the other hand, if we want to minimise $KL(q||p)$, we need to make sure when $p(x)$ is close to zero, $q(x)$ is also near zero.</p>
+<p><img src="https://github.com/lemelondeau/notes/blob/master/others/KL.png" alt="KL divergence"></p>
+<p>Figure 1. The blue contours show the real distribution $p$ and we want to approximate it with a Gaussian distribution. (a) The red contours represent a distribution minimises $KL(p||q)$. (b)(c) The red contours show distributions minimise $KL(q||p)$. [2]</p>
+<h2 id="2-Sufficient-statistics-and-Exponential-family"><a href="#2-Sufficient-statistics-and-Exponential-family" class="headerlink" title="2. Sufficient statistics and Exponential family"></a>2. Sufficient statistics and Exponential family</h2><h3 id="2-1-Sufficient-statistics-1"><a href="#2-1-Sufficient-statistics-1" class="headerlink" title="2.1 Sufficient statistics [1]"></a>2.1 Sufficient statistics [1]</h3><p>Suppose we have a random sample $\textbf{x}_1,…,\textbf{x}_n$ taken from a distribution $f(\textbf{x}|\theta)$ which relies on an unknown parameter $\theta$ in a parameter space $\Theta$. The purpose of parameter estimation is to estimate the parameter $\theta$ from the random sample. Any function of the random sample $\textbf{x}_1,…,\textbf{x}_n$ is called a <strong>statistic</strong>. Mean and variance functions are both statistics.</p>
+<p>If a statistic $T$ contains all the information to estimate $\theta$, then we say $T$ is <strong>sufficient</strong>. That is to say, given $T=t$, the random sample $\textbf{x}_1,…,\textbf{x}_n$ and parameter $\theta$ are independent of each other.</p>
+<h5 id="Factorization-theorem"><a href="#Factorization-theorem" class="headerlink" title="Factorization theorem:"></a>Factorization theorem:</h5><p>A statistic $T(\textbf{x}_1,…,\textbf{x}_n)$ is a sufficient statistic for θ if and only if the joint pdf or the joint point mass function $f(\textbf{X}|\theta)$ of $\textbf{x}_1,…,\textbf{x}_n$ can be factorized as follows: </p>
 <script type="math/tex; mode=display">
-\nabla \varphi(x, y, z)=\left(\frac{\partial\varphi}{\partial x},\frac{\partial\varphi}{\partial y},\frac{\partial\varphi}{\partial z}\right)</script><p>The direction of $\nabla\varphi $ is the orientation in which the <a href="http://mathworld.wolfram.com/DirectionalDerivative.html" target="_blank" rel="external">directional derivative</a> has the largest value and $|\nabla\varphi|$ is the value of that <a href="http://mathworld.wolfram.com/DirectionalDerivative.html" target="_blank" rel="external">directional derivative</a> [1]. If we consider a function of two variables, we can get a tangent plane at any point on the surface. There will be many directions along this plane,  and the direction with the largest slope is the gradient at this point. That is to say, the gradient at a particular point is the direction that the function value changes the fastest.</p>
+f(\textbf{X}|\theta)=\mu(\textbf{X})\upsilon[T(\textbf{X}),\theta]</script><p>Here, the function $\mu$ and $\upsilon$ are nonnegative, the function $\mu$ may depend on $\textbf{x}$ but does not depend on $\theta$, and the function $\upsilon$ depends on $\theta$ but will depend on the observed value $\textbf{x}$ only through the value of the statistic $T(\textbf x)$.</p>
+<h3 id="2-2-Exponential-family"><a href="#2-2-Exponential-family" class="headerlink" title="2.2 Exponential family"></a>2.2 Exponential family</h3><script type="math/tex; mode=display">
+p(\textbf x|\pmb\eta)=h(\textbf x)g(\pmb\eta)\exp\{\pmb \eta^T \textbf u(\textbf x)\}</script><script type="math/tex; mode=display">
+p(\textbf X|\pmb \eta)=\left(\prod_{n=1}^Nh(\textbf x_n)\right)g(\pmb \eta)^N\exp \left\{\pmb \eta^T \sum_{n=1}^N\textbf u(\textbf x)\right\}</script><p>According to the factorisation theorem, $\sum_{n=1}^N\textbf u(\textbf x)$ is the <em>sufficient statistic</em> of the distribution in exponential family. Therefore, $\mathbb E[\textbf u(\textbf x)]$ is also a sufficient statistic.</p>
+<p>Taking the gradient of both sides of the following equation:</p>
+<script type="math/tex; mode=display">
+g(\pmb \eta)\int h(\textbf x)\exp\{\pmb \eta^T \textbf u(\textbf x)\}\text d\textbf x=1</script><p>we will obtain</p>
+<script type="math/tex; mode=display">
+-\nabla \ln g(\pmb \eta)=\mathbb E[\textbf u(\textbf x)]</script><h2 id="3-Expectation-Propagation"><a href="#3-Expectation-Propagation" class="headerlink" title="3. Expectation Propagation"></a>3. Expectation Propagation</h2><p>Suppose $\mathcal D$ is observed data and $\textbf z$ is hidden variable (including parameters), we would like to know the posterior over $\textbf z$, $p(\textbf z|D)$. The aim of expectation propagation (EP) is to approximate a distribution $p(\textbf z)$ with another distribution $q(\textbf z)$ which is a member of the exponential family. The problem is to minimise $KL(p||q)$:</p>
+<script type="math/tex; mode=display">
+KL(p||q)=-\ln g(\pmb \eta)-\pmb \eta^T\mathbb E_{p(\textbf z)}[\textbf u(\textbf z)]+\text{const}</script><p>We can minimise $ KL(p||q)$ by setting the gradient w.r.t. $\pmb \eta$ to zero and this results in</p>
+<script type="math/tex; mode=display">
+-\nabla \ln g(\pmb \eta)=\mathbb E_{p(\textbf z)}[\textbf u(\textbf z)]</script><p>We have seen in section 2 that </p>
+<script type="math/tex; mode=display">
+-\nabla \ln g(\pmb \eta)=\mathbb E_{q(\textbf z)}[\textbf u(\textbf z)]</script><p>Therefore,</p>
+<script type="math/tex; mode=display">
+\mathbb E_{q(\textbf z)}[\textbf u(\textbf z)]=\mathbb E_{p(\textbf z)}[\textbf u(\textbf z)]</script><p>That is to say, the optimum solution corresponds to matching the expected sufficient statistics. This is called <strong>moment matching</strong>.</p>
+<p>Unfortunately, at this moment, averaging with respect to  the true distribution is intractable.</p>
+<h5 id="A-product-of-factors"><a href="#A-product-of-factors" class="headerlink" title="A product of factors:"></a>A product of factors:</h5><p>Let’s look back at the posterior distribution itself.</p>
+<script type="math/tex; mode=display">
+p(\textbf z|D)=\frac{p(D, \textbf z)}{p(D)}</script><p>where the joint distribution can be write as a product of factors in the form (given the data is i.i.d):</p>
+<script type="math/tex; mode=display">
+p(D, \textbf z)=p(\textbf z)\prod_i f_i(\textbf z)</script><p>For each datapoint $\textbf x_i$, there is a factor $f_i(\textbf z)=p(\textbf x_i|\textbf z)$. $p(\textbf z)$ corresponds to the prior.</p>
+<p>The approximation to the posterior distribution is also given by a product of factors</p>
+<script type="math/tex; mode=display">
+q(\textbf z)=\frac 1Z\prod_i \widetilde{f}_i(\textbf z)</script><p>The KL divergence to minimise is now given by</p>
+<script type="math/tex; mode=display">
+KL(p\|q)=KL\left(\frac{1}{p(D)}p(\textbf z)\prod_i f_i(\textbf z) \|\frac 1Z\prod_i \widetilde{f}_i(\textbf z)\right)</script><p>Instead of minimising the KL divergence w.r.t the true distribution, we can perform the minimisation between the corresponding pairs $f_i(\textbf z)$ and $\tilde f_i(\textbf z)$.</p>
+<blockquote>
+<p>Expectation Propagation</p>
+<ol>
+<li><p>Initialize all the approximating factors $\tilde f_i(\textbf z)$</p>
 </li>
-<li><p>Gradient descent algorithm</p>
-<p>Gradient descent algorithm can be used to find the local minimum of a differentiable  function $\varphi(\mathbf{\mu})$. After knowing what the gradient is, it’ll be easy to understand the gradient descent algorithm. Starting from an initial point $\mathbf{x}_0$ (usually this point is important), walk a small step $\eta$ (the step size is also important) along the opposite direction of the gradient, it will reach a new point, then restart from the new point. Repeat this procedure until the different in output after taking a step is smaller than the threshold $\eta$.<br>There are three parameters in this algorithm, the initial point, the step size, and the threshold respectively. Consider the sequence $\mathbf{\mu}_0, \mathbf{\mu}_1, \mathbf{\mu}_2, …$, such that</p>
+<li><p>Initialize the posterior approximation by setting</p>
 <script type="math/tex; mode=display">
-\mathbf \mu_{t+1}=\mathbf \mu_t-\gamma\nabla\varphi(\mathbf \mu_t), t \geq 0</script></li>
-<li><p>Gradient descent for linear regression</p>
-<p>For linear regression, there are $n$ data points</p>
+q(\textbf z) \propto \prod_i \tilde f_i(\textbf z)</script></li>
+<li><p>Until convergence:</p>
+<p>a. Choose a factor $\tilde f_j(\textbf z)$ to refine.</p>
+<p>b. Remove $\tilde f_j(\textbf z)$ from the posterior by division and get $q^{\setminus j}(\textbf z)$</p>
+<p>c. Evaluate the new posterior by setting the sufficient statistics of $q^{\text{new}}(\textbf z)$ equal to those of $q^{\setminus j}(\textbf z)f_j(\textbf z)$, $(f_j(\textbf z)=p(\textbf x_j|\textbf z))$, evaluate the normalisation constant</p>
 <script type="math/tex; mode=display">
-y_i=\mathbf x_i^T\mathbf w+b, i=1,2,...,n</script><p>The objective function to minimize is</p>
+Z_j=\int q^{\setminus j}(\textbf z)f_j(\textbf z) \text d\textbf z</script><p>d. Evaluate and store the new factor</p>
 <script type="math/tex; mode=display">
-J(\theta)=\frac{1}{n}\sum_{i=1}^{n}J_i(\theta)= \frac{1}{n}\sum_{i=1}^n J_i(\mathbf{w}, b)</script></li>
-</ul>
-<p>  Now, we can use the gradient descent algorithm to compute $\mathbf w$ and $b$, denote them as \theta$:</p>
-<script type="math/tex; mode=display">
-\mathbf \theta_{t+1}=\mathbf \theta_t-\gamma\nabla J(\mathbf \theta_t), t \geq 0</script><p>Code can be found <a href="https://github.com/lemelondeau/Algorithms/blob/master/SGD.ipynb" target="_blank" rel="external">here</a>.</p>
-<h2 id="2-Stochastic-Gradient-Descent"><a href="#2-Stochastic-Gradient-Descent" class="headerlink" title="2. Stochastic Gradient Descent"></a>2. Stochastic Gradient Descent</h2><p>Many machine learning problems can be solved using gradient descent. However, when the dataset is very large, it will take a long time to update the  cost. Stochastic gradient descent (SGD) deals with this issue by updating the cost use only one sample each iteration:</p>
-<script type="math/tex; mode=display">
-\mathbf \theta_{t+1}=\mathbf \theta_t-\gamma\nabla J_i(\mathbf \theta_t), t \geq 0</script><p>Gradient descent:</p>
-<script type="math/tex; mode=display">
-\text{g}_{t+1}\leftarrow \frac{1}{n}\sum_{i=1}^{n}\nabla J_i(\theta_{t})\\
-
-\theta_{t+1} \leftarrow \theta_{t}-\gamma \text{g}_{t+1}</script><p>SGD:</p>
-<script type="math/tex; mode=display">
-\text{g}_{t+1}\leftarrow \nabla J_i(\theta_{t})\\
-\theta_{t+1} \leftarrow \theta_{t}-\gamma \text{g}_{t+1}</script><p>The convergence of SGD is proven.</p>
-<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p>​    [1]. <a href="http://mathworld.wolfram.com/Gradient.html" target="_blank" rel="external">http://mathworld.wolfram.com/Gradient.html</a></p>
+\tilde f_j(\textbf z)=Z_j\frac{q^{\text{new}}(\textbf z)}{q^{\setminus j}(\textbf z)}</script></li>
+</ol>
+<!--belief propagation--> 
+</blockquote>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p>​    [1]. <a href="http://people.missouristate.edu/songfengzheng/Teaching/MTH541/Lecture%20notes/Sufficient.pdf" target="_blank" rel="external">http://people.missouristate.edu/songfengzheng/Teaching/MTH541/Lecture%20notes/Sufficient.pdf</a></p>
+<p>​    [2]. Christopher M. Bishop. <em>Pattern Recognition and Machine Learning</em>. Springer, 2006.</p>
 
       
     </div>
@@ -413,8 +441,8 @@ J(\theta)=\frac{1}{n}\sum_{i=1}^{n}J_i(\theta)= \frac{1}{n}\sum_{i=1}^n J_i(\mat
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/10/14/hello-world/" rel="next" title="Hello World">
-                <i class="fa fa-chevron-left"></i> Hello World
+              <a href="/2018/03/17/EM/" rel="next" title="The EM algorithm">
+                <i class="fa fa-chevron-left"></i> The EM algorithm
               </a>
             
           </div>
@@ -422,10 +450,6 @@ J(\theta)=\frac{1}{n}\sum_{i=1}^{n}J_i(\theta)= \frac{1}{n}\sum_{i=1}^n J_i(\mat
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/02/10/mcmc/" rel="prev" title="Monte Carlo Sampling">
-                Monte Carlo Sampling <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -572,7 +596,7 @@ J(\theta)=\frac{1}{n}\sum_{i=1}^{n}J_i(\theta)= \frac{1}{n}\sum_{i=1}^n J_i(\mat
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Gradient-Descent"><span class="nav-number">1.</span> <span class="nav-text">1. Gradient Descent</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Stochastic-Gradient-Descent"><span class="nav-number">2.</span> <span class="nav-text">2. Stochastic Gradient Descent</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#References"><span class="nav-number">3.</span> <span class="nav-text">References</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-KL-divergence"><span class="nav-number">1.</span> <span class="nav-text">1.KL divergence</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Sufficient-statistics-and-Exponential-family"><span class="nav-number">2.</span> <span class="nav-text">2. Sufficient statistics and Exponential family</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-Sufficient-statistics-1"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 Sufficient statistics [1]</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Factorization-theorem"><span class="nav-number">2.1.0.1.</span> <span class="nav-text">Factorization theorem:</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-Exponential-family"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 Exponential family</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Expectation-Propagation"><span class="nav-number">3.</span> <span class="nav-text">3. Expectation Propagation</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#A-product-of-factors"><span class="nav-number">3.0.0.1.</span> <span class="nav-text">A product of factors:</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#References"><span class="nav-number">4.</span> <span class="nav-text">References</span></a></li></ol></div>
             
 
           </div>
@@ -735,9 +759,9 @@ J(\theta)=\frac{1}{n}\sum_{i=1}^{n}J_i(\theta)= \frac{1}{n}\sum_{i=1}^n J_i(\mat
     
       <script type="text/javascript">
         var disqus_config = function () {
-          this.page.url = 'https://lemelondeau.github.io/2018/01/28/SGD/';
-          this.page.identifier = '2018/01/28/SGD/';
-          this.page.title = 'Stochastic Gradient Descent';
+          this.page.url = 'https://lemelondeau.github.io/2018/04/01/EP/';
+          this.page.identifier = '2018/04/01/EP/';
+          this.page.title = 'Expectation Propagation';
         };
         var d = document, s = d.createElement('script');
         s.src = 'https://lemelondeau.disqus.com/embed.js';

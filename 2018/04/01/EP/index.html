@@ -87,12 +87,12 @@
 <meta property="og:site_name" content="Cool Site">
 <meta property="og:description" content="Notes of PRML Expectation propagation (EP) is another deterministic approximate inference method besides variational inference (VI). The different between them is one minimises $KL(p||q)$ while anothe">
 <meta property="og:locale" content="en">
-<meta property="og:image" content="https://github.com/lemelondeau/notes/blob/master/others/KL.png">
-<meta property="og:updated_time" content="2018-03-31T17:18:27.000Z">
+<meta property="og:image" content="https://github.com/lemelondeau/notes/blob/master/resources/KL.png">
+<meta property="og:updated_time" content="2018-04-13T07:55:44.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Expectation Propagation">
 <meta name="twitter:description" content="Notes of PRML Expectation propagation (EP) is another deterministic approximate inference method besides variational inference (VI). The different between them is one minimises $KL(p||q)$ while anothe">
-<meta name="twitter:image" content="https://github.com/lemelondeau/notes/blob/master/others/KL.png">
+<meta name="twitter:image" content="https://github.com/lemelondeau/notes/blob/master/resources/KL.png">
 
 
 
@@ -356,7 +356,7 @@
 <p>Expectation propagation (EP) is another deterministic approximate inference method besides variational inference (VI). The different between them is one minimises $KL(p||q)$ while another minimises $KL(q||p)$.</p>
 <h2 id="1-KL-divergence"><a href="#1-KL-divergence" class="headerlink" title="1.KL divergence"></a>1.KL divergence</h2><script type="math/tex; mode=display">
 KL(p||q)=\int p(x)\log \frac{p(x)}{q(x)}\text{d}(x)</script><p>Where $p$ is the real distribution and $q$ is the approximation we want to find.  If we want to minimise $KL(p||q)$, we need to make sure when $p(x)$ is large, $q(x)$ also need to be large ($q(x)$ is non-zero when $p(x)$ is non-zero). On the other hand, if we want to minimise $KL(q||p)$, we need to make sure when $p(x)$ is close to zero, $q(x)$ is also near zero.</p>
-<p><img src="https://github.com/lemelondeau/notes/blob/master/others/KL.png" alt="KL divergence"></p>
+<p><img src="https://github.com/lemelondeau/notes/blob/master/resources/KL.png" alt="KL divergence"></p>
 <p>Figure 1. The blue contours show the real distribution $p$ and we want to approximate it with a Gaussian distribution. (a) The red contours represent a distribution minimises $KL(p||q)$. (b)(c) The red contours show distributions minimise $KL(q||p)$. [2]</p>
 <h2 id="2-Sufficient-statistics-and-Exponential-family"><a href="#2-Sufficient-statistics-and-Exponential-family" class="headerlink" title="2. Sufficient statistics and Exponential family"></a>2. Sufficient statistics and Exponential family</h2><h3 id="2-1-Sufficient-statistics-1"><a href="#2-1-Sufficient-statistics-1" class="headerlink" title="2.1 Sufficient statistics [1]"></a>2.1 Sufficient statistics [1]</h3><p>Suppose we have a random sample $\textbf{x}_1,…,\textbf{x}_n$ taken from a distribution $f(\textbf{x}|\theta)$ which relies on an unknown parameter $\theta$ in a parameter space $\Theta$. The purpose of parameter estimation is to estimate the parameter $\theta$ from the random sample. Any function of the random sample $\textbf{x}_1,…,\textbf{x}_n$ is called a <strong>statistic</strong>. Mean and variance functions are both statistics.</p>
 <p>If a statistic $T$ contains all the information to estimate $\theta$, then we say $T$ is <strong>sufficient</strong>. That is to say, given $T=t$, the random sample $\textbf{x}_1,…,\textbf{x}_n$ and parameter $\theta$ are independent of each other.</p>
@@ -451,10 +451,6 @@ Z_j=\int q^{\setminus j}(\textbf z)f_j(\textbf z) \text d\textbf z</script><p>d.
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/04/03/hello-world/" rel="prev" title="Hello World">
-                Hello World <i class="fa fa-chevron-right"></i>
-              </a>
-            
           </div>
         </div>
       
@@ -544,7 +540,7 @@ Z_j=\int q^{\setminus j}(\textbf z)f_j(\textbf z) \text d\textbf z</script><p>d.
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">5</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -557,7 +553,7 @@ Z_j=\int q^{\setminus j}(\textbf z)f_j(\textbf z) \text d\textbf z</script><p>d.
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-count">1</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>

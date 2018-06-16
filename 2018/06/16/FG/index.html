@@ -79,18 +79,20 @@
 
 
 
-<meta name="description" content="Notes of PRML 1. Linear Basis Function Models1.1 Model FormalisationLinear regression is one of the most basic regression models for  supervised learning. It is a parametric model, that is to say, the">
+<meta name="description" content="1. Factor graph, what is this for?On directed graphs, the joint distribution is written as the factorization of conditional distributions. Similarly, on undirected graphs, the joint distribution is th">
 <meta name="keywords" content="algorithms">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Bayesian Linear Regression and Gaussian Process">
-<meta property="og:url" content="https://lemelondeau.github.io/2018/05/10/BLR/index.html">
+<meta property="og:title" content="The sum-product algorithm">
+<meta property="og:url" content="https://lemelondeau.github.io/2018/06/16/FG/index.html">
 <meta property="og:site_name" content="Cool Site">
-<meta property="og:description" content="Notes of PRML 1. Linear Basis Function Models1.1 Model FormalisationLinear regression is one of the most basic regression models for  supervised learning. It is a parametric model, that is to say, the">
+<meta property="og:description" content="1. Factor graph, what is this for?On directed graphs, the joint distribution is written as the factorization of conditional distributions. Similarly, on undirected graphs, the joint distribution is th">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2018-05-23T06:08:05.000Z">
+<meta property="og:image" content="https://github.com/lemelondeau/notes/blob/master/resources/sum-product.png?raw=true">
+<meta property="og:updated_time" content="2018-06-16T16:24:36.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Bayesian Linear Regression and Gaussian Process">
-<meta name="twitter:description" content="Notes of PRML 1. Linear Basis Function Models1.1 Model FormalisationLinear regression is one of the most basic regression models for  supervised learning. It is a parametric model, that is to say, the">
+<meta name="twitter:title" content="The sum-product algorithm">
+<meta name="twitter:description" content="1. Factor graph, what is this for?On directed graphs, the joint distribution is written as the factorization of conditional distributions. Similarly, on undirected graphs, the joint distribution is th">
+<meta name="twitter:image" content="https://github.com/lemelondeau/notes/blob/master/resources/sum-product.png?raw=true">
 
 
 
@@ -120,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="https://lemelondeau.github.io/2018/05/10/BLR/"/>
+  <link rel="canonical" href="https://lemelondeau.github.io/2018/06/16/FG/"/>
 
 
 
 
 
-  <title>Bayesian Linear Regression and Gaussian Process | Cool Site</title>
+  <title>The sum-product algorithm | Cool Site</title>
   
 
 
@@ -272,7 +274,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://lemelondeau.github.io/2018/05/10/BLR/">
+    <link itemprop="mainEntityOfPage" href="https://lemelondeau.github.io/2018/06/16/FG/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="lemelondeau">
@@ -289,7 +291,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Bayesian Linear Regression and Gaussian Process</h1>
+          <h1 class="post-title" itemprop="name headline">The sum-product algorithm</h1>
         
 
         <div class="post-meta">
@@ -301,8 +303,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-05-10T19:48:29+08:00">
-                2018-05-10
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-06-16T23:36:06+08:00">
+                2018-06-16
               </time>
             
 
@@ -320,9 +322,9 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/05/10/BLR/#comments" itemprop="discussionUrl">
+                <a href="/2018/06/16/FG/#comments" itemprop="discussionUrl">
                   <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/05/10/BLR/" itemprop="commentCount"></span>
+                        data-disqus-identifier="2018/06/16/FG/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -350,89 +352,51 @@
       
 
       
-        <p><strong><em>Notes of PRML</em></strong></p>
-<h2 id="1-Linear-Basis-Function-Models"><a href="#1-Linear-Basis-Function-Models" class="headerlink" title="1. Linear Basis Function Models"></a>1. Linear Basis Function Models</h2><h3 id="1-1-Model-Formalisation"><a href="#1-1-Model-Formalisation" class="headerlink" title="1.1 Model Formalisation"></a>1.1 Model Formalisation</h3><p>Linear regression is one of the most basic regression models for  supervised learning. It is a <strong>parametric model</strong>, that is to say, the number of parameters to be determined is fixed. During training, the objective of linear regression is to minimise the difference between real output and predicted output. Or equivalently, to maximise the likelihood function. </p>
-<p>The simplest linear model for regression is</p>
+        <h2 id="1-Factor-graph-what-is-this-for"><a href="#1-Factor-graph-what-is-this-for" class="headerlink" title="1. Factor graph, what is this for?"></a>1. Factor graph, what is this for?</h2><p>On directed graphs, the joint distribution is written as the factorization of conditional distributions. Similarly, on undirected graphs, the joint distribution is the factorization of potential functions. Both the conditional distribution and the potential function are functions over subset of variables. Now, to make the factorization explicitly, additional nodes are introduced to represent the factors. Those new nodes are factor nodes, and the new bipartite graph is called factor graph.</p>
+<p>There can be several difference factor graphs for the same graph. This allows factor graph to be more specific about the precise form of the factorization [1]. Also, there is no assumption that the factors in factor graph is corresponding to cliques or conditional independence properties of an underlying graph.</p>
+<blockquote>
+<p>Definition.[3]</p>
+<p><em>A factor graph is a bipartite graph that expresses the structure of the factorization. The first part represents the variables, and the second part represents the functions. There is an edge from variable node $x_i$ to factor node $f_j$ if and only if $x_i$ is an argument of $f_j$.</em> </p>
+</blockquote>
+<h2 id="2-The-SUM-PRODUCT-algorithm"><a href="#2-The-SUM-PRODUCT-algorithm" class="headerlink" title="2. The SUM-PRODUCT algorithm"></a>2. The SUM-PRODUCT algorithm</h2><h3 id="2-1-Marginal-distribution-for-one-variable"><a href="#2-1-Marginal-distribution-for-one-variable" class="headerlink" title="2.1 Marginal distribution for one variable"></a>2.1 Marginal distribution for one variable</h3><p>The aim of the sum-product algorithm is to get the marginal distribution for every variable. Let $x_1, x_2,…,x_n$ be a collection of variables. By definition, the marginal is obtained by summing the joint distribution over all variables except $x$ so that</p>
 <script type="math/tex; mode=display">
-y(\mathbf{x},\mathbf{w})=w_0+w_1x_1+...+w_Dx_D=\mathbf{w}^T\mathbf{x}</script><p>where $\mathbf{x}=(x_1, … ,x_D)T$ and $\mathbf{w}=(w_0, w_1, … .w_D)$ which is the parameter. It is clear that the output $y$ is a linear combination of the input variables. The key property of this model is that <strong>it is a linear function of the parameters</strong> [1]. Even if the model have the form</p>
+p(x)=\sum_{\mathbf x \setminus x} p(\mathbf x)</script><p>If will solve this in a brute-force way, exponential number of steps will be taken.  Let’s see how a factor graph reduce the complexity of this problem. Hereafter, we assume the graph is a tree.</p>
+<p>The joint distribution can be factorized as</p>
 <script type="math/tex; mode=display">
-y(\mathbf{x},\mathbf{w})=w_0+w_1x_1^2+...+w_Dx_D^2 ,</script><p>it is still a linear regression model. This property encourages us to extend the model to be more flexible by considering linear combinations of fixed nonlinear functions of the input variables, with the following form</p>
+p(\mathbf x) =\prod _{s=1}^{S} f_s(x_{\mathcal{N}(s)})</script><p>where $S$ is the number of factors, $x_{\mathcal {N}(s)}$ denotes the neighbors of $f_s$ which are a subset of variables. </p>
+<p>How does the factorization help to reduce the complexity? The distributive law is the key point.</p>
+<p>Suppose the joint distribution has the form</p>
 <script type="math/tex; mode=display">
-y(\mathbf{x},\mathbf{w})=w_0+\sum _{j=1}^{M-1} w_j\phi_j(\mathbf{x})</script><p>where $\phi_j(\mathbf{x})$ are known as basis functions, $M$ is the number of parameters. Define $\phi_0(\mathbf x)=1$, we get</p>
+p(x_1, x_2, x_3, x_4)=f_a(x_1)f_b(x_1,x_2)f_c(x_2,x_3)f_d(x_2,x_4)f_e(x_3)f_f(x_4)</script><p>Now we want to get $p(x_1)$ which is</p>
 <script type="math/tex; mode=display">
-y(\mathbf{x},\mathbf{w})=\sum_{j=0}^{M-1}w_j\phi_j{\mathbf x}=\mathbf w^T\pmb{\phi}(\mathbf x)</script><p>By using nonlinear basis functions, we allow the function $y(\mathbf{x},\mathbf{w})$ to be a non-linear function of the input vector $\mathbf x$.</p>
-<h3 id="1-2-Model-Fitting"><a href="#1-2-Model-Fitting" class="headerlink" title="1.2 Model Fitting"></a>1.2 Model Fitting</h3><p>Given a dataset $\mathcal{D}(\mathbf{X,t})$, usually the observations are noisy. Assume the target variable $t$ is the noisy observation</p>
+p(x_1)=\sum_{x_2}\sum_{x_3}\sum _{x_4}f_a(x_1)f_b(x_1,x_2)f_c(x_2,x_3)f_d(x_2,x_4)f_e(x_3)f_f(x_4)</script><p>By using the distributive law, we can get</p>
 <script type="math/tex; mode=display">
-t=y(\mathbf{x},\mathbf{w})+\epsilon</script><p>where $\epsilon \sim \mathcal N(0, \beta^{-1})$. Thus we can write</p>
+p(x_1)=f_a(x_1) \left (\sum_{x_2}f_b(x_1,x_2)  \left (\sum_{x_3}f_c(x_2,x_3)f_e(x_3) \right) \left( \sum _{x_4}f_d(x_2,x_4)f_f(x_4)\right) \right)</script><p>Now, it’s less expensive to get the result. What’s more, from the above formula, we can see that there is message passing from $x_3,x_4$ to $x_2$ and then to $x_1$. The final message on $x_1$ involves all the information from other nodes. Let’s look into message passing.</p>
+<h4 id="Message-passing"><a href="#Message-passing" class="headerlink" title="Message passing"></a><strong>Message passing</strong></h4><p>Messages that flow along the edges of graph are separated to two groups: messages flow from variable nodes to factor nodes $\mu_{x \rightarrow f}$, <!--this return is for displaying inline math,otherwise something is wrong--></p>
+<p>and messages flow from factor nodes to variable nodes $\mu_{f \rightarrow x}$. All the message of previous nodes are marginalized, so the message from a certain node is a function of this node only. </p>
+<p><img src="https://github.com/lemelondeau/notes/blob/master/resources/sum-product.png?raw=true" alt="sum-product.png"> </p>
+<p>For the previous example, $p(x_1)$ can be written as</p>
 <script type="math/tex; mode=display">
-p(t|\mathbf x, \mathbf w, \beta)=\mathcal N(t|y(\mathbf{x},\mathbf{w}), \beta^{-1})</script><p><strong>Least Square Method</strong></p>
-<p>The squared error is written as</p>
+p(x_1)=\mu_{f_a \rightarrow x_1}. \mu_{f_b \rightarrow x_1}</script><p>Further, $\mu_{f_b \rightarrow x_1}$ has the form</p>
 <script type="math/tex; mode=display">
-E_D(\mathbf w)= \frac{1}{2}\sum_{n=1}^{N}\{t_n-\mathbf w^T\pmb{\phi}(\mathbf x_n)\}^2</script><p>Take the derivative respect to $\mathbf w$ and make it to be zero, we can get</p>
+\mu_{f_b \rightarrow x_1}=\sum_{x_2} f_b.\mu_{x_2\rightarrow f_b}=\sum_{n(f_b)\setminus x_1}\left( f_b\prod _{x \in n(f_b) \setminus x_1}\mu_{x\rightarrow f_b}\right)</script><p>where $n(f_b) $ denote the neighbor variable set of $f_b$.</p>
+<p>Similarly, $\mu_{x_2\rightarrow f_b}$ has the form</p>
 <script type="math/tex; mode=display">
-\mathbf w=(\Phi^T\Phi)^{-1}\Phi^T\mathbf t</script><p><strong>Maximum Likelihood</strong> </p>
-<p>For i.i.d variables, the likelihood function of target variables is</p>
+\mu_{x_2\rightarrow f_b} =\mu_{f_c \rightarrow x_2}.\mu_{f_d \rightarrow x_2}=\prod_{f \in n(x_2)\setminus f_b} \mu_{f \rightarrow x_2}</script><p>We can define the two types of message at this moment.</p>
+<p><strong>Variable node to factor node:</strong></p>
 <script type="math/tex; mode=display">
-p(\mathbf t|\mathbf X, \mathbf w, \beta)=\prod_{n=1}^{N}\mathcal N(t_n|\mathbf w^T\pmb{\phi}(\mathbf x_n), \beta^{-1})</script><p>Taking the logarithm of the likelihood function </p>
+\mu_{x\rightarrow f} =\prod_{f_l \in n(x)\setminus f} \mu_{f_l \rightarrow x}</script><p><strong>Factor node to variable node:</strong></p>
 <script type="math/tex; mode=display">
-\begin{align}
-\ln p(\mathbf t|\mathbf w, \beta)&=\sum_{n=1}^{N}\ln \mathcal N(t_n|\mathbf w^T\pmb{\phi}(\mathbf x_n), \beta^{-1})\\
-&=\sum_{n=1}^{N}\ln (\frac{\sqrt\beta}{\sqrt{2\pi}}\exp(-(t_n-\mathbf w^T\pmb{\phi}(\mathbf x_n))^2\beta/2))\\
-&=\sum_{n=1}^{N}(\frac12\ln\beta-\frac12\ln(2\pi)-\frac12\beta\{t_n-\mathbf w^T\pmb{\phi}(\mathbf x_n)\}^2)\\
-&=\frac N2\ln \beta-\frac N2\ln(2\pi)-\beta E_D(\mathbf w)
-\end{align}</script><p>Maximising the likelihood is therefore equivalent to minimising the square error.</p>
-<h2 id="2-Bayesian-Linear-Regression"><a href="#2-Bayesian-Linear-Regression" class="headerlink" title="2. Bayesian Linear Regression"></a>2. Bayesian Linear Regression</h2><p>Over-fitting is a big issue when using maximum likelihood, Bayesian treatment is considered to avoid this.</p>
-<h3 id="2-1-Posterior-Distribution-of-Parameter"><a href="#2-1-Posterior-Distribution-of-Parameter" class="headerlink" title="2.1 Posterior Distribution of Parameter"></a>2.1 Posterior Distribution of Parameter</h3><p>One of the aim of Bayesian linear regression is to get the distribution of parameter $\mathbf w$, which is written as $p(\mathbf w|\mathbf X, \mathbf t)$. This is a posterior distribution. Assume a Gaussian distribution over $\mathbf w$,</p>
+\mu_{f \rightarrow x}=\sum_{n(f_b)\setminus x}  \left( f \prod _{t \in n(f_b) \setminus x}\mu_{t\rightarrow f} \right)</script><p>For the leaf variable node, $\mu_{x\rightarrow f}=1$. </p>
+<p>For the leaf factor node, $\mu_{f \rightarrow x}=f(x)$.</p>
+<p>The marginal distribution for $x$ is</p>
 <script type="math/tex; mode=display">
-p(\mathbf w)=\mathcal N(\mathbf w|\mathbf{m_0},\mathbf{S_0}).</script><p>The likelihood is also easy to get</p>
-<script type="math/tex; mode=display">
-\begin{align}
-p(\mathbf t|\mathbf X, \mathbf w, \beta)&=\prod_{n=1}^{N}\mathcal N(t_n|\mathbf w^T\pmb{\phi}(\mathbf x_n), \beta^{-1})
-\\
-&=\mathcal N(\mathbf t|\Phi \mathbf w, \beta^{-1}I)
-\end{align}</script><p>Apply 2.116 conditional Gaussian we will get</p>
-<script type="math/tex; mode=display">
-p(\mathbf w|\mathbf X, \mathbf t)=\mathcal N(\mathbf w|\mathbf{m}_N,\mathbf{S}_N).</script><p>where</p>
-<script type="math/tex; mode=display">
-\mathbf m_N=\mathbf S_N(\mathbf S_0^{-1}\mathbf m_0+\beta\Phi^T\mathbf t)\\
-\mathbf S_N^{-1}=\mathbf S_0^{-1}+\beta\Phi^T\Phi</script><p>Now, assign a parameter $\alpha$ to control the prior distribution</p>
-<script type="math/tex; mode=display">
-p(\mathbf w|\alpha)=\mathcal N(\mathbf w|\mathbf 0, \alpha^{-1}I)</script><p>and the corresponding posterior distribution is given by</p>
-<script type="math/tex; mode=display">
-\mathbf m_N=\beta\mathbf S_N\Phi^T\mathbf t\\
-\mathbf S_N^{-1}=\alpha I+\beta\Phi^T\Phi</script><h3 id="2-2-Predictive-Distribution"><a href="#2-2-Predictive-Distribution" class="headerlink" title="2.2 Predictive Distribution"></a>2.2 Predictive Distribution</h3><p>To make prediction for new values of $\mathbf x$, we need to integrate $\mathbf w$ out. The predictive distribution is given by</p>
-<script type="math/tex; mode=display">
-p(t|\mathbf x, \mathcal D,\alpha, \beta)=\int p(t|\mathbf x, \mathbf w, \beta)p(\mathbf w|\mathcal D,\alpha, \beta)\text{d}\mathbf w\\
-=\int \mathcal N(t|\mathbf w^T\phi (\mathbf x) ,\beta^{-1})\mathcal N(\mathbf w|\mathbf{m}_N,\mathbf{S}_N)\text{d}\mathbf w\\
-=\mathcal N(t|\mathbf m_N^T\phi(\mathbf x), \sigma_N^2(\mathbf x))</script><p>where $\sigma_N^2$ is given by (use 2.115 marginal distribution)</p>
-<script type="math/tex; mode=display">
-\sigma_N^2(\mathbf x)=\frac1\beta+\phi(\mathbf x)^T\mathbf S_N\phi(\mathbf x)</script><h2 id="3-Relation-with-Gaussian-Process"><a href="#3-Relation-with-Gaussian-Process" class="headerlink" title="3. Relation with Gaussian Process"></a>3. Relation with Gaussian Process</h2><p>In the above Bayesian linear regression model, $\alpha$ and $\beta$ govern the predictive distribution. We call $\alpha$ and $\beta$ <strong>hyperparameters</strong>.</p>
-<p>The hidden variables is given by</p>
-<script type="math/tex; mode=display">
-y =y(\mathbf{x},\mathbf{w})=\sum_{j=0}^{M-1}w_j\phi_j{\mathbf x}=\mathbf w^T\pmb{\phi}(\mathbf x)</script><p>$\mathbf y$ is a linear combination of Gaussian distributed variables hence is itself Gaussian. The mean and covariance is given by</p>
-<script type="math/tex; mode=display">
-\mathbb{E}[y] = \phi(\mathbf x)^T\mathbb{E}(\mathbf w)=\phi(\mathbf x)^T\mathbf{m}_N,\\
-\text{cov}[y,y']=\mathbb E [(y-\mathbb{E}[y])(y'-\mathbb{E}[y'])] =\phi(\mathbf x)^T\mathbf{S}_N\phi(\mathbf x^\prime),</script><p>We already have </p>
-<script type="math/tex; mode=display">
-\mathbf m_N=\beta\mathbf S_N\Phi^T\mathbf t\\
-\mathbf S_N^{-1}=\alpha I+\beta\Phi^T\Phi</script><p>therefore,</p>
-<script type="math/tex; mode=display">
-\mathbb E[y]=\beta\phi(\mathbf x)^T\mathbf S_N\Phi^T\mathbf t \\
-\text{var}[y]=\phi(\mathbf x)^T\mathbf S_N\phi(\mathbf x)</script><p>The mean and variance can be rewritten as following (though I didn’t try)</p>
-<script type="math/tex; mode=display">
-\mathbb E[y]=\phi(\mathbf x)^T\Sigma_p\Phi(K+\beta^{-1}I)^{-1}\mathbf t\\
-\text{var}[y]=\phi(\mathbf x)^T\Sigma_p\phi(\mathbf x)-\phi(\mathbf x)^T\Sigma_p\Phi(K+\beta^{-1}I)^{-1}\Phi^T\Sigma_p\phi(\mathbf x)</script><p>where $\Sigma_p=\alpha^{-1} I$ and $K=\Phi^T \Sigma_p\Phi$.</p>
-<p>Define $k(\mathbf x, \mathbf x^{\prime})=\phi(\mathbf x)^T\Sigma_p\phi(\mathbf x^{\prime})$, we can easily see Bayesian linear regression is equivalent to a Gaussian Process model, whose mean and variance of the predictive distribution are</p>
-<script type="math/tex; mode=display">
-\pmb{\mu}=k(\mathbf x, \mathbf X)^T(K+\beta^{-1}I)^{-1}\mathbf t\\
-\Sigma=k(\mathbf x, \mathbf x)-k(\mathbf x, \mathbf X)^T (K+\beta^{-1}I)^{-1}k(\mathbf x, \mathbf X)</script><h2 id=""><a href="#" class="headerlink" title=""></a><!--4. The Evidence Approximation--></h2><!--marginalisation over hyperparameters-->
-<!--laplace approximation-->
-<!--EM-->
-<!--log marginal likelihood-->
-<p>(Finish writing on 2018-05-23 T^T)</p>
-<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p>​    [1]. Christopher M. Bishop (2006). <em>Pattern Recognition and Machine Learning</em>. Springer.</p>
-<p>​    [2]. Rasmussen, C. E., &amp; Williams, C. K. (2006). <em>Gaussian process for machine learning</em>. MIT press.</p>
-<p>​    [3]. Robert, C. (2014). <em>Machine learning, a probabilistic perspective.</em></p>
+p(x)=\prod_{f_s \in n(x)}\mu_{f_s\rightarrow x}</script><p>Take $x$ as the root, all the message will be passed from leaves to it. Message is passed according to the following protocol.</p>
+<p><strong>Message-Passing Protocol.</strong> A node can send a message to a neighboring mode when and only when it has received messages from all of its neighbors.</p>
+<h3 id="2-2-Marginal-distribution-for-all-variables"><a href="#2-2-Marginal-distribution-for-all-variables" class="headerlink" title="2.2 Marginal distribution for all variables"></a>2.2 Marginal distribution for all variables</h3><p>If we want to get the marginals for every variable, we can run the above algorithm for each of them. However, doing so will cause many repeated computation. We can pick any of the variable node as root, propagate messages from the leaves to the root as before. The the root node can send message to all its neighbors. Thereafter, the message will be passes down all the way to the leaves. Since every variable node will have received message from all of its neighbors, we can readily calculate the marginal distribution for each of them. We only need to compute messages twice as the number of edges. </p>
+<h1 id="References"><a href="#References" class="headerlink" title="References"></a>References</h1><p>​    [1]. Christopher M. Bishop (2006). <em>Pattern Recognition and Machine Learning</em>. Springer.</p>
+<p>​    [2]. Jordan, Michael I (2003). “An introduction to probabilistic graphical models.” </p>
+<p>​    [3]. <a href="https://lipn.univ-paris13.fr/~dovgal/2016/03/03/sum-product-algorithm-part1.html" target="_blank" rel="external">https://lipn.univ-paris13.fr/~dovgal/2016/03/03/sum-product-algorithm-part1.html</a></p>
 
       
     </div>
@@ -463,8 +427,8 @@ y =y(\mathbf{x},\mathbf{w})=\sum_{j=0}^{M-1}w_j\phi_j{\mathbf x}=\mathbf w^T\pmb
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/04/01/EP/" rel="next" title="Expectation Propagation">
-                <i class="fa fa-chevron-left"></i> Expectation Propagation
+              <a href="/2018/05/23/GPs/" rel="next" title="Gaussian Process">
+                <i class="fa fa-chevron-left"></i> Gaussian Process
               </a>
             
           </div>
@@ -472,10 +436,6 @@ y =y(\mathbf{x},\mathbf{w})=\sum_{j=0}^{M-1}w_j\phi_j{\mathbf x}=\mathbf w^T\pmb
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/05/23/GPs/" rel="prev" title="Gaussian Process">
-                Gaussian Process <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -622,7 +582,7 @@ y =y(\mathbf{x},\mathbf{w})=\sum_{j=0}^{M-1}w_j\phi_j{\mathbf x}=\mathbf w^T\pmb
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Linear-Basis-Function-Models"><span class="nav-text">1. Linear Basis Function Models</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-Model-Formalisation"><span class="nav-text">1.1 Model Formalisation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-Model-Fitting"><span class="nav-text">1.2 Model Fitting</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Bayesian-Linear-Regression"><span class="nav-text">2. Bayesian Linear Regression</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-Posterior-Distribution-of-Parameter"><span class="nav-text">2.1 Posterior Distribution of Parameter</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-Predictive-Distribution"><span class="nav-text">2.2 Predictive Distribution</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Relation-with-Gaussian-Process"><span class="nav-text">3. Relation with Gaussian Process</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#"><span class="nav-text"></span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#References"><span class="nav-text">References</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Factor-graph-what-is-this-for"><span class="nav-text">1. Factor graph, what is this for?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-The-SUM-PRODUCT-algorithm"><span class="nav-text">2. The SUM-PRODUCT algorithm</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-Marginal-distribution-for-one-variable"><span class="nav-text">2.1 Marginal distribution for one variable</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Message-passing"><span class="nav-text">Message passing</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-Marginal-distribution-for-all-variables"><span class="nav-text">2.2 Marginal distribution for all variables</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#References"><span class="nav-text">References</span></a></div>
             
 
           </div>
@@ -785,9 +745,9 @@ y =y(\mathbf{x},\mathbf{w})=\sum_{j=0}^{M-1}w_j\phi_j{\mathbf x}=\mathbf w^T\pmb
     
       <script type="text/javascript">
         var disqus_config = function () {
-          this.page.url = 'https://lemelondeau.github.io/2018/05/10/BLR/';
-          this.page.identifier = '2018/05/10/BLR/';
-          this.page.title = 'Bayesian Linear Regression and Gaussian Process';
+          this.page.url = 'https://lemelondeau.github.io/2018/06/16/FG/';
+          this.page.identifier = '2018/06/16/FG/';
+          this.page.title = 'The sum-product algorithm';
         };
         var d = document, s = d.createElement('script');
         s.src = 'https://lemelondeau.disqus.com/embed.js';

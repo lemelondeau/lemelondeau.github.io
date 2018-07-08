@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="en">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/duola.jpg?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/duola.jpg?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/duola.jpg?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="algorithms," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Kernel methods are widely used in machine learning, such as in support vector machines (SVMs), Gaussian processes (GPs), and kernel principle component analysis (PCA). How does it get our favor? In pl">
+<meta name="keywords" content="algorithms">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kernel methods">
+<meta property="og:url" content="https://lemelondeau.github.io/2018/07/01/kernel/index.html">
+<meta property="og:site_name" content="Cool Site">
+<meta property="og:description" content="Kernel methods are widely used in machine learning, such as in support vector machines (SVMs), Gaussian processes (GPs), and kernel principle component analysis (PCA). How does it get our favor? In pl">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2018-07-08T18:39:31.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Kernel methods">
+<meta name="twitter:description" content="Kernel methods are widely used in machine learning, such as in support vector machines (SVMs), Gaussian processes (GPs), and kernel principle component analysis (PCA). How does it get our favor? In pl">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://lemelondeau.github.io/2018/07/01/kernel/"/>
+
+
+
+
+
+  <title>Kernel methods | Cool Site</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-80781234-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?//hm.baidu.com/hm.js?ee75cf111111aa99f8540efa2570970";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Cool Site</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://lemelondeau.github.io/2018/07/01/kernel/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="lemelondeau">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/duola.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cool Site">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Kernel methods</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-07-01T16:37:28+08:00">
+                2018-07-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/07/01/kernel/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/07/01/kernel/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><strong>Kernel methods</strong> are widely used in machine learning, such as in support vector machines (SVMs), Gaussian processes (GPs), and kernel principle component analysis (PCA). How does it get our favor? In plain English, a kernel function helps us project points in the current space to a <strong>feature space</strong> (usually high-dimensional)  and compute the inner product of feature vectors in this new space. What so good is, we don’t need a explicit function for the projection, the inner product is computed directly using this kernel!</p>
+<p>There are four questions to answer. Why do we need the feature space? To which space the points are projected? What kind of functions can be used as a kernel function? How to find a proper kernel for a certain problem?</p>
+<h2 id="Why-feature-space"><a href="#Why-feature-space" class="headerlink" title="Why feature space"></a>Why feature space</h2><p>In machine learning, we sometimes make a problem solvable by projecting the data points to another space. For example, in classification problem, the data points cannot be separated linearly. If we map those points to a high-dimensional space, they can be separated linearly. In linear regression, there are <em>basis functions</em> non-linear to the input. Those basis functions make the model more flexible and together they can be considered as a mapping function. </p>
+<p>Let’s denote $\mathcal X$ as the original space and $\mathbf x$ as a data point in $\mathcal X$. Denote $\Phi$ as a mapping from $\mathcal X$ to a feature space $\mathcal F$.</p>
+<h2 id="What-kind-of-feature-space"><a href="#What-kind-of-feature-space" class="headerlink" title="What kind of feature space"></a>What kind of feature space</h2><p>Computing $\Phi(\mathbf x)^T\Phi(\mathbf x^\prime)$ is often an important step after the projection. Now, suppose the feature space is very high-dimensional or even infinite-dimensional, it would be hard to get $\Phi(\mathbf x)^T\Phi(\mathbf x^\prime)$. How to tackle with this issue? Since all we want to get is the inner product (not the feature vectors) eventually, it’s <del>not very</del> natural to ask is there a function in the original space that gives the result of the inner product? This function can be defined as </p>
+<script type="math/tex; mode=display">
+k(\mathbf x,\mathbf x^\prime)=\Phi(\mathbf x)^T\Phi(\mathbf x^\prime)=\langle \Phi(\mathbf x),\Phi(\mathbf x^\prime) \rangle_{\ell^2}</script><p>More generally, $\Phi$ might map the input to a Non-Euclidean space, where $\langle \Phi(\mathbf x),\Phi(\mathbf x^\prime) \rangle_{\mathcal F}$ is computed. This requires the feature space endowed with an inner-product operation. <strong>Hilbert spaces</strong> meet this requirement. Informally speaking, a Hilbert space is a vector space with norm and inner-product operation. Both $L^2$ and $\ell^2$ are Hilbert spaces.</p>
+<!--You may ask, is there always a function $k$ and how to determine it? Not always. There will be a satisfactory function when the feature space is a reproducing kernel Hilbert space (**RKHS**). ?????? (It seems RKHS is a function space)-->
+<p>The function $k$ is called <strong>kernel function</strong> and using a kernel function to represent the inner product in a feature space is called the <strong>kernel trick</strong>. Since inner product can measure the similarity, kernel function can also be considered as a method for similarity measure.</p>
+<h2 id="Kernel-functions"><a href="#Kernel-functions" class="headerlink" title="Kernel functions"></a>Kernel functions</h2><p>What kinds of function can be used as the kernel function? The answer is when the <strong>Gram matrix</strong> $K$, defined by</p>
+<script type="math/tex; mode=display">
+K_{ij}=k(\mathbf x_i,\mathbf x_j)</script><p>be positive definite for any set of inputs $( \mathbf x_i  )_{i=1}^N$.</p>
+<p>If $K$ is positive definite, it can be written as $K=U^T\Lambda U=(\Lambda^{\frac 12}U) ^T(\Lambda^{\frac 12}U)=A^TA$. Then $K_{ij}=A_i^TA_j$. Define $\Phi(\mathbf x_i)=A_i$, then $K_{ij}=\Phi(\mathbf x_i)^T\Phi(\mathbf x_j)$. That means the function $k$ has a corresponding feature space $\mathcal F=R ^D$ which is the mapping from $\mathcal X$  using $\Phi$. We call $k$ a <strong>Mercer</strong> <strong>kernel</strong>, or <strong>positive deﬁnite kernel</strong>. A reproducing kernel Hilbert space (<strong>RKHS</strong>) is a space of functions related to a mercer kernel, it will be introduced latter. According to Moore-Aronszajn theorem, there is a one-to-one mapping between RKHS and positive definite kernels. </p>
+<p>From another point of view, if $k$ can be written as the inner product of two feature vectors. Let $\mathcal H$ be a Hilbert space, $\Phi: \mathcal X \rightarrow \mathcal H$, then for any vector $\mathbf v$</p>
+<script type="math/tex; mode=display">
+\begin{align}
+\mathbf v^TK\mathbf v&=\sum_i\sum_j  v_jk(\mathbf x_i,\mathbf x_j)v_i  \\
+&=\sum_i\sum_j v_j \Phi(\mathbf x_i)^T\Phi(\mathbf x_j)v_i \\
+& (?)=\sum_i\sum_j  \langle v_i \Phi(\mathbf x_i),v_j\Phi(\mathbf x_j)\rangle_{\mathcal H}  \\
+&=\left\langle \sum_i v_i\Phi(\mathbf x_i),\sum_j v_j\Phi(\mathbf x_j)\right\rangle _{\mathcal H}\\
+&=\left\|\sum_i v_i\Phi(\mathbf x_i)\right\|^2_{\mathcal H}\geq0
+\end{align}</script><p>That tells us, if $k$ is a valid kernel, $K$ must be positive definite.</p>
+<p> (?) What’s the relationship between $\Phi(\mathbf x)^T\Phi(\mathbf x^\prime)$ and $\langle \Phi(\mathbf x),\Phi(\mathbf x^\prime) \rangle_{\mathcal H}$</p>
+<h4 id="Mercer’s-condition-wikipedia"><a href="#Mercer’s-condition-wikipedia" class="headerlink" title="Mercer’s condition (wikipedia)"></a>Mercer’s condition (wikipedia)</h4><blockquote>
+<p>A real-valued function is said to fulfil Mercer’s condition if for all <a href="https://en.wikipedia.org/wiki/Square-integrable_function" target="_blank" rel="external">square-integrable functions</a> <em>g</em>(<em>x</em>) one has</p>
+<script type="math/tex; mode=display">
+\int\int g(x)k(x,y)g(y)dxdy \geq 0</script><p>The discrete form:</p>
+<script type="math/tex; mode=display">
+\sum_{i,j} c_ic_j K_{ij} \geq 0</script></blockquote>
+<h4 id="Constructing-kernels-PRML-6-2"><a href="#Constructing-kernels-PRML-6-2" class="headerlink" title="Constructing kernels (PRML 6.2)"></a>Constructing kernels (PRML 6.2)</h4><p>Choose a feature space mapping $\Phi$ and then use this to find the corresponding kernel.</p>
+<p>Construct kernel functions directly.</p>
+<p>Construct new kernels out of simpler kernels as building blocks.</p>
+<p>Use a generative model.</p>
+<p>Fisher kernel.</p>
+<h2 id="Which-kernel-to-choose"><a href="#Which-kernel-to-choose" class="headerlink" title="Which kernel to choose"></a>Which kernel to choose</h2><p>Although for each RKHS space of $\mathcal X$ there exists a unique positive definite kernel, we usually don’t know which kernel is the most suitable one as the mapping function is implicit. There are numerous number of RKHS and therefore kernels. This makes the model very flexible. However, if a wrong kernel is chosen, we can’t get a good result. Kernel selection lies in the heart of machine learning models based on kernel function.</p>
+<p>There are two understandings of kernel selection. One is to determine the parameters in the kernel function, a.k.a hyperparameters of the model. This can be trained by gradient-based methods. The other one is to choose the form of the kernel. It is traditionally done by comparing among kernel candidates and pick the best one, or selected by experts.</p>
+<h2 id="RKHS-and-feature-space"><a href="#RKHS-and-feature-space" class="headerlink" title="RKHS and feature space"></a>RKHS and feature space</h2><p>According to <strong>Mercer’s theorem</strong>, if $k$ is a Mercer kernel (positive definite kernel), then there exists an infinite sequence of normalised eigenfunctions $(\phi_i)_{i=1}^\infty$ and eigenvalues $(\lambda_i)_{i=1}^\infty$, that we can write $k$ as</p>
+<script type="math/tex; mode=display">
+k(\mathbf x, \mathbf x^\prime)=\sum_{i=1}^\infty \lambda_i\phi_i(\mathbf x)\phi_i(\mathbf x^\prime)</script><p>This is just  the infinite-dimensional analogue of the diagonalization of a symmetric matrix.</p>
+<p>Use all the eigenfunctions as basis, we can get a function space, this is the reproducing kernel Hilbert space (<strong>RKHS</strong>). </p>
+<script type="math/tex; mode=display">
+\mathcal H_k=\{ f: f(\mathbf x)=\sum_{i=1}^\infty f_i \phi_i(\mathbf x), \sum_{i=1}^\infty \frac{f_i^2}{\lambda_i} < \infty\}</script><p>Every function in RKHS is a linear combination of $(\phi_i)_{i=1}^\infty$, and $(f_i)_{i=1}^\infty$ is the coordinate in this space. The <strong>inner product</strong> in this space is <strong>defined</strong> as:</p>
+<script type="math/tex; mode=display">
+\langle f, f^\prime \rangle_{\mathcal H_K}=\sum_{i=1}^\infty \frac{f_i f_i^\prime}{\lambda_i}</script><p>Now let’s consider the feature space, what’s the relationship between the above RKHS and the feature space $\mathcal H$ that $\Phi: \mathcal X \rightarrow \mathcal H$ ? Recall that $\Phi$ is a mapping corresponding to the kernel function $k$. According to the definition of kernel function, we have </p>
+<script type="math/tex; mode=display">
+k(\mathbf x,\mathbf x^\prime)= \langle \Phi(\mathbf x),\Phi(\mathbf x^\prime)\rangle_{\mathcal H}</script><p>where $\Phi(\mathbf x)=k(\mathbf x, \cdot)$. The notion $f(\cdot)$ refers to the function itself.</p>
+<p>To perform inner product in $\ell^2$ space, scale the coordinate by $\sqrt \lambda_i$, write $\Phi (\mathbf x)$ as</p>
+<script type="math/tex; mode=display">
+\Phi(\mathbf x)=\left \langle \sqrt{\lambda_i}\phi_i(\mathbf x)\right\rangle_{i=0}^{\infty}</script><p>Now we have</p>
+<script type="math/tex; mode=display">
+\begin{align}
+\left \langle \Phi(\mathbf x),\Phi(\mathbf x^\prime)\right\rangle_{\ell^2} &=\left \langle   \left \langle \sqrt{\lambda_i}\phi_i(\mathbf x)\right\rangle_i,   \left \langle \sqrt{\lambda_i}\phi_i(\mathbf x)\right\rangle_i \right\rangle _{\ell^2}\\
+&=\sum_{i=1}^\infty \lambda_i\phi_i(\mathbf x)\phi_i(\mathbf x^\prime)\\
+&=k(\mathbf x, \mathbf x^\prime)
+\end{align}</script><h4 id="The-reproducing-property"><a href="#The-reproducing-property" class="headerlink" title="The reproducing property"></a>The reproducing property</h4><p>Why this space is so called? </p>
+<p>Define a special function in RKHS, $\mathbf y \in \mathcal X$</p>
+<script type="math/tex; mode=display">
+K_\mathbf x (\mathbf y)=\sum_{i=1}^\infty \lambda_i\phi_i(\mathbf x)\phi_i(\mathbf y)=\sum_{i=1}^\infty g_i\phi_i(\mathbf y)</script><script type="math/tex; mode=display">
+\langle K_\mathbf x , K_\mathbf x^\prime  \rangle_{\mathcal H_k}=
+\sum_{i=1}^\infty\frac{g_i g_i^\prime}{\lambda_i}
+\\=\sum_{i=1}^\infty \frac{\lambda_i\phi_i(\mathbf x) \lambda_i\phi_i(\mathbf x^\prime)}{\lambda_i}
+\\=\sum_{i=1}^\infty \lambda_i\phi_i(\mathbf x)\phi_i(\mathbf x^\prime)
+\\=k(\mathbf x, \mathbf x^\prime)</script><p>This is called the reproducing property. $k$ is a inner product of two vectors.</p>
+<script type="math/tex; mode=display">
+\langle K_\mathbf x , f  \rangle_{\mathcal H_k}=
+\sum_{i=1}^\infty\frac{g_i f_i}{\lambda_i}
+\\=\sum_{i=1}^\infty \frac{\lambda_i\phi_i(\mathbf x) f_i}{\lambda_i}
+\\=\sum_{i=1}^\infty f_i\phi_i(\mathbf x)=f(\mathbf x)</script><h1 id="References"><a href="#References" class="headerlink" title="References"></a>References</h1><p>​    [1]. Christopher M. Bishop (2006). <em>Pattern Recognition and Machine Learning</em>. Springer.</p>
+<p>​    [2]. <a href="http://www.gatsby.ucl.ac.uk/~gretton/coursefiles/lecture4_introToRKHS.pdf" target="_blank" rel="external">http://www.gatsby.ucl.ac.uk/~gretton/coursefiles/lecture4_introToRKHS.pdf</a></p>
+<p>​    [3]. <a href="http://legacydirs.umiacs.umd.edu/~hal/docs/daume04rkhs.pdf" target="_blank" rel="external">http://legacydirs.umiacs.umd.edu/~hal/docs/daume04rkhs.pdf</a></p>
+<p>​    [4]. Robert, C. (2014). <em>Machine learning, a probabilistic perspective.</em></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/algorithms/" rel="tag"># algorithms</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/16/FG/" rel="next" title="The sum-product algorithm">
+                <i class="fa fa-chevron-left"></i> The sum-product algorithm
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/07/09/GPs/" rel="prev" title="Understanding Gaussian Process">
+                Understanding Gaussian Process <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/duola.jpg"
+                alt="lemelondeau" />
+            
+              <p class="site-author-name" itemprop="name">lemelondeau</p>
+              <p class="site-description motion-element" itemprop="description">J'aime le melon d'eau.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/lemelondeau" target="_blank" title="github">
+                    
+                      <i class="fa fa-fw fa-globe"></i>github</a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Why-feature-space"><span class="nav-text">Why feature space</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#What-kind-of-feature-space"><span class="nav-text">What kind of feature space</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kernel-functions"><span class="nav-text">Kernel functions</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Mercer’s-condition-wikipedia"><span class="nav-text">Mercer’s condition (wikipedia)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Constructing-kernels-PRML-6-2"><span class="nav-text">Constructing kernels (PRML 6.2)</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Which-kernel-to-choose"><span class="nav-text">Which kernel to choose</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RKHS-and-feature-space"><span class="nav-text">RKHS and feature space</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#The-reproducing-property"><span class="nav-text">The reproducing property</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#References"><span class="nav-text">References</span></a></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lemelondeau</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.3</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://lemelondeau.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://lemelondeau.github.io/2018/07/01/kernel/';
+          this.page.identifier = '2018/07/01/kernel/';
+          this.page.title = 'Kernel methods';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://lemelondeau.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>

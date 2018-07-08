@@ -88,7 +88,7 @@
 <meta property="og:description" content="1. Factor graph, what is this for?On directed graphs, the joint distribution is written as the factorization of conditional distributions. Similarly, on undirected graphs, the joint distribution is th">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="https://github.com/lemelondeau/notes/blob/master/resources/sum-product.png?raw=true">
-<meta property="og:updated_time" content="2018-06-16T16:24:36.000Z">
+<meta property="og:updated_time" content="2018-07-07T07:29:51.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="The sum-product algorithm">
 <meta name="twitter:description" content="1. Factor graph, what is this for?On directed graphs, the joint distribution is written as the factorization of conditional distributions. Similarly, on undirected graphs, the joint distribution is th">
@@ -394,6 +394,7 @@ p(x_1)=\mu_{f_a \rightarrow x_1}. \mu_{f_b \rightarrow x_1}</script><p>Further, 
 p(x)=\prod_{f_s \in n(x)}\mu_{f_s\rightarrow x}</script><p>Take $x$ as the root, all the message will be passed from leaves to it. Message is passed according to the following protocol.</p>
 <p><strong>Message-Passing Protocol.</strong> A node can send a message to a neighboring mode when and only when it has received messages from all of its neighbors.</p>
 <h3 id="2-2-Marginal-distribution-for-all-variables"><a href="#2-2-Marginal-distribution-for-all-variables" class="headerlink" title="2.2 Marginal distribution for all variables"></a>2.2 Marginal distribution for all variables</h3><p>If we want to get the marginals for every variable, we can run the above algorithm for each of them. However, doing so will cause many repeated computation. We can pick any of the variable node as root, propagate messages from the leaves to the root as before. The the root node can send message to all its neighbors. Thereafter, the message will be passes down all the way to the leaves. Since every variable node will have received message from all of its neighbors, we can readily calculate the marginal distribution for each of them. We only need to compute messages twice as the number of edges. </p>
+<p><strong>Code in C++ can be found <a href="https://github.com/lemelondeau/Algorithms/blob/master/sum-product.cpp" target="_blank" rel="external">here</a> (Can’t believe I used C++ three years ago), the <a href="https://github.com/lemelondeau/Algorithms/blob/master/sum-product%20problem.png" target="_blank" rel="external">problem</a> is from NUS CS5340 2015/2016 Sem1.</strong></p>
 <h1 id="References"><a href="#References" class="headerlink" title="References"></a>References</h1><p>​    [1]. Christopher M. Bishop (2006). <em>Pattern Recognition and Machine Learning</em>. Springer.</p>
 <p>​    [2]. Jordan, Michael I (2003). “An introduction to probabilistic graphical models.” </p>
 <p>​    [3]. <a href="https://lipn.univ-paris13.fr/~dovgal/2016/03/03/sum-product-algorithm-part1.html" target="_blank" rel="external">https://lipn.univ-paris13.fr/~dovgal/2016/03/03/sum-product-algorithm-part1.html</a></p>
@@ -427,8 +428,8 @@ p(x)=\prod_{f_s \in n(x)}\mu_{f_s\rightarrow x}</script><p>Take $x$ as the root,
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/05/23/GPs/" rel="next" title="Gaussian Process">
-                <i class="fa fa-chevron-left"></i> Gaussian Process
+              <a href="/2018/05/10/BLR/" rel="next" title="Bayesian Linear Regression and Gaussian Process">
+                <i class="fa fa-chevron-left"></i> Bayesian Linear Regression and Gaussian Process
               </a>
             
           </div>
@@ -436,6 +437,10 @@ p(x)=\prod_{f_s \in n(x)}\mu_{f_s\rightarrow x}</script><p>Take $x$ as the root,
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/07/01/kernel/" rel="prev" title="Kernel methods">
+                Kernel methods <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -526,7 +531,7 @@ p(x)=\prod_{f_s \in n(x)}\mu_{f_s\rightarrow x}</script><p>Take $x$ as the root,
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-count">9</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>

@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="Cool Site">
 <meta property="og:description" content="1. Understanding Variational InferenceI had a difficult time understanding what does the phrase Variational Inference mean. First, let’s see what is inference. It refers to statistical inference which">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2018-03-17T14:59:26.000Z">
+<meta property="og:updated_time" content="2018-07-06T03:22:12.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Variational Inference">
 <meta name="twitter:description" content="1. Understanding Variational InferenceI had a difficult time understanding what does the phrase Variational Inference mean. First, let’s see what is inference. It refers to statistical inference which">
@@ -372,7 +372,10 @@ KL(q||p) &=KL(q(\mathbf{Z})||p(\mathbf Z|\mathbf X)) \\
 <script type="math/tex; mode=display">
 \mathcal L(p)=\int q(\mathbf Z)\log \frac {p(\mathbf X, \mathbf Z)}{q(\mathbf Z)} d \mathbf Z \qquad\qquad\qquad(2)</script><p>This is the <strong>functional</strong> we want to maximise.</p>
 <blockquote>
-<p>The first term is an expected likelihood; it encourages densities that place their mass on configurations of the latent variables that explain the observed data. The second term is the negative divergence between the variational density and the prior; it encourages densities close to the prior. Thus the variational objective mirrors the usual balance between likelihood and prior. [5]</p>
+<script type="math/tex; mode=display">
+\mathcal L(p)=E_{q(\mathbf Z)}[\log p(\mathbf X, \mathbf Z)-\log q(\mathbf Z)]\\
+=E_{q(\mathbf Z)}[\log p(\mathbf X|\mathbf Z)+\log p(\mathbf Z)-\log q(\mathbf Z)]\\
+=E_{q(\mathbf Z)}[\log p(\mathbf X|\mathbf Z)]-KL(q(\mathbf Z)||p(\mathbf Z))</script><p>The first term is an expected likelihood; it encourages densities that place their mass on configurations of the latent variables that explain the observed data. The second term is the negative divergence between the variational density and the prior; it encourages densities close to the prior. Thus the variational objective mirrors the usual balance between likelihood and prior. [5]</p>
 </blockquote>
 <p>The lower bound can also be obtained by applying Jensen’s inequality:</p>
 <script type="math/tex; mode=display">
@@ -564,7 +567,7 @@ q_j^* \propto \exp\left\{E_{-j}[\log p(\mathbf Z_j,\mathbf Z_{-j}, \mathbf X)]\r
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-count">9</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>

@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="algorithms," />
 
 
 
@@ -79,16 +79,18 @@
 
 
 
-<meta name="description" content="J&apos;aime le melon d&apos;eau.">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Cool Site">
-<meta property="og:url" content="https://lemelondeau.github.io/archives/2018/01/index.html">
+<meta name="description" content="Informal introduction to Gaussian processesGaussian processes (GPs) are used for supervised learning. It is entitled with the ability to present the uncertainty of prediction naturally. This model is">
+<meta name="keywords" content="algorithms">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Understanding Gaussian Process">
+<meta property="og:url" content="https://lemelondeau.github.io/2018/07/09/GPs/index.html">
 <meta property="og:site_name" content="Cool Site">
-<meta property="og:description" content="J&apos;aime le melon d&apos;eau.">
+<meta property="og:description" content="Informal introduction to Gaussian processesGaussian processes (GPs) are used for supervised learning. It is entitled with the ability to present the uncertainty of prediction naturally. This model is">
 <meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2018-07-08T17:56:32.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Cool Site">
-<meta name="twitter:description" content="J&apos;aime le melon d&apos;eau.">
+<meta name="twitter:title" content="Understanding Gaussian Process">
+<meta name="twitter:description" content="Informal introduction to Gaussian processesGaussian processes (GPs) are used for supervised learning. It is entitled with the ability to present the uncertainty of prediction naturally. This model is">
 
 
 
@@ -118,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="https://lemelondeau.github.io/archives/2018/01/"/>
+  <link rel="canonical" href="https://lemelondeau.github.io/2018/07/09/GPs/"/>
 
 
 
 
 
-  <title>Archive | Cool Site</title>
+  <title>Understanding Gaussian Process | Cool Site</title>
   
 
 
@@ -162,7 +164,7 @@
     
   
 
-  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-archive">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -256,74 +258,169 @@
           <div id="content" class="content">
             
 
+  <div id="posts" class="posts-expand">
+    
+
+  
+
   
   
   
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
-
-      <span class="archive-page-counter">
-        
-        
-        
-          
-        
-        Um..! 9 posts in total. Keep on posting.
-      </span>
-
-      
-
-        
-        
-        
-
-        
-          
-          <div class="collection-title">
-            <h1 class="archive-year" id="archive-year-2018">2018</h1>
-          </div>
-        
-        
-
-        
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://lemelondeau.github.io/2018/07/09/GPs/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="lemelondeau">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/duola.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cool Site">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2018/01/28/SGD/" itemprop="url">
-              
-                <span itemprop="name">Stochastic Gradient Descent</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">Understanding Gaussian Process</h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-01-28T16:49:36+08:00"
-              content="2018-01-28" >
-          01-28
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-07-09T00:00:00+08:00">
+                2018-07-09
+              </time>
+            
 
-    </header>
-  </article>
+            
 
+            
+          </span>
 
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/07/09/GPs/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/07/09/GPs/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
+      
 
+      
+        <h2 id="Informal-introduction-to-Gaussian-processes"><a href="#Informal-introduction-to-Gaussian-processes" class="headerlink" title="Informal introduction to Gaussian processes"></a>Informal introduction to Gaussian processes</h2><p>Gaussian processes (<strong>GPs</strong>) are used for supervised learning. It is entitled with the ability to present the uncertainty of prediction naturally. This model is originally from kriging. The basic idea of kriging is to predict the value of a function at a given point by computing a weighted average of the known values of the function in the neighbourhood of the point (wikipedia). This  idea  is very similar to k-nearest neighbourhood (KNN) algorithm. However, for computing the output of a new point, kriging uses all the observed data points and there will be weights related to them.  It is thus important to know the value of each weight, in other words, how two outputs are related.</p>
+<p>I’d like to explain the GP model informally. </p>
+<p>Given data $\mathcal D(\mathbf {X,y})$, we want to train a function $f$ such that one we have a new input $\mathbf x_i$, we can predict the output $\mathbf y_i=f(\mathbf x_i)$. It is nature to have the idea that when two inputs are close by, their outputs should also be similar. The next question is, which neighbour has more influence on a new point? The influence can also be considered as the similarity of two outputs. Since what we have for the new point is its input, we hope to define the similarity in the <strong>input space</strong>. Thus for any two outputs, the similarity can be measured. </p>
+<p>This gives the rise of multivariate Gaussian, or joint Gaussian, where the similarity matrix is exactly the covariance matrix. We now regard the outputs as different variables in a multivariate Gaussian. It is said a Gaussian process is a generalization of the Gaussian probability distribution and is a distributions over <strong>functions</strong> [1]. This can be hard to understand at the first sight. Let’s consider an output $\mathbf y_i$, it is the value of $f$ at location $\mathbf x_i$, and it is also a random variable in this multivariate Gaussian. Once we have the covariance matrix, we get the similarity between any two outputs.  It’s hard to learn the covariance matrix directly. Therefore, we need a function to compute the covariance for any two variables. We call this function the <strong>kernel function</strong> or <strong>covariance function</strong>. From another point of view, the covariance matrix is positive definite, that means there is a kernel function for similarity measurement. Our aim now becomes to find the proper kernel to measure the similarity.</p>
+<p>In the training process, we train the kernel and the objective is to maximise the likelihood. For prediction in regression, we use the rules for conditional Gaussian. Different from other regression methods, the results of prediction is not a single value, there will be a mean and a variance for each output. We are thus able to measure the uncertainty of the prediction.</p>
+<p>The formal definition of Gaussian process is:</p>
+<blockquote>
+<p>A Gaussian process is a collection of random variables, any ﬁnite number of which have a joint Gaussian distribution. [1]</p>
+</blockquote>
+<p>For a thorough understanding of GP, read [1].</p>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p>​    [1]. Rasmussen, C. E., &amp; Williams, C. K. (2006). <em>Gaussian process for machine learning</em>. MIT press.</p>
+<p>​    [2]. Robert, C. (2014). <em>Machine learning, a probabilistic perspective.</em></p>
+
+      
     </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/algorithms/" rel="tag"># algorithms</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/01/kernel/" rel="next" title="Kernel methods">
+                <i class="fa fa-chevron-left"></i> Kernel methods
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
 
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -331,6 +428,20 @@
 
 
           
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
 
         </div>
         
@@ -351,8 +462,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -417,6 +537,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Informal-introduction-to-Gaussian-processes"><span class="nav-text">Informal introduction to Gaussian processes</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#References"><span class="nav-text">References</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -550,6 +686,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
 
   
 
@@ -567,6 +707,18 @@
       <script id="dsq-count-scr" src="https://lemelondeau.disqus.com/count.js" async></script>
     
 
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://lemelondeau.github.io/2018/07/09/GPs/';
+          this.page.identifier = '2018/07/09/GPs/';
+          this.page.title = 'Understanding Gaussian Process';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://lemelondeau.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
     
 
   

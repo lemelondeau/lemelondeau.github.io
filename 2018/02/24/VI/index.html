@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="Cool Site">
 <meta property="og:description" content="1. Understanding Variational InferenceI had a difficult time understanding what does the phrase Variational Inference mean. First, let’s see what is inference. It refers to statistical inference which">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2018-07-06T03:22:12.000Z">
+<meta property="og:updated_time" content="2018-10-23T04:34:29.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Variational Inference">
 <meta name="twitter:description" content="1. Understanding Variational InferenceI had a difficult time understanding what does the phrase Variational Inference mean. First, let’s see what is inference. It refers to statistical inference which">
@@ -353,9 +353,9 @@
         <h2 id="1-Understanding-Variational-Inference"><a href="#1-Understanding-Variational-Inference" class="headerlink" title="1. Understanding Variational Inference"></a>1. Understanding Variational Inference</h2><p>I had a difficult time understanding what does the phrase <em>Variational Inference</em> mean. First, let’s see what is <em>inference</em>. It refers to <em>statistical inference</em> which means to estimate or <strong>infer</strong> the parameters/hidden variables of a statistical model. For example, estimating the weights in linear regression. In general, there are two different statistical inference methods, namely <em>Frequentist method</em> and <em>Bayesian inference</em>. Still use the linear regression as an example, frequentist method will give a estimated value for each weight while the Bayesian inference will produce a distribution over the weights. What is going to be used in variational inference is Bayesian inference, where posterior distribution is derived by the Bayes’ rule.</p>
 <p>What does <em>variational</em> refer to? Variation is a concept in <em>functional</em> ( mappings from a set of functions to the real numbers. It’s to find a function which minimise or maximise the functional. If we want to get the optima of a function, usually we can take the derivative, which is called differential. Similarly, if we take the derivative of a functional, it is called variational.</p>
 <p>As we know, posterior distribution is notoriously intractable. In variational inference, we aim to find an approximation to it. During this process, a functional is maximised, where the input of the optima is the approximation mentioned just now.</p>
-<h2 id="2-Tackle-Posterior-with-Variational-Inference"><a href="#2-Tackle-Posterior-with-Variational-Inference" class="headerlink" title="2. Tackle Posterior with Variational Inference"></a>2. Tackle Posterior with Variational Inference</h2><h3 id="2-1-Problem-Formalisation"><a href="#2-1-Problem-Formalisation" class="headerlink" title="2.1 Problem Formalisation"></a>2.1 Problem Formalisation</h3><p>Suppose we have observations $X$ and latent random variables $Z$. Here, the latent random variables include the parameters of model and the latent variables whose counterparts are the observations. We are going to compute $P(Z|X)$, the posterior which is</p>
+<h2 id="2-Tackle-Posterior-with-Variational-Inference"><a href="#2-Tackle-Posterior-with-Variational-Inference" class="headerlink" title="2. Tackle Posterior with Variational Inference"></a>2. Tackle Posterior with Variational Inference</h2><h3 id="2-1-Problem-Formalisation"><a href="#2-1-Problem-Formalisation" class="headerlink" title="2.1 Problem Formalisation"></a>2.1 Problem Formalisation</h3><p>Suppose we have observations $\mathbf X ={\mathbf x_1, \mathbf x_2,…,\mathbf x_n}$ and latent random variables $\mathbf Z={\mathbf z_1,\mathbf z_2,…,\mathbf z_n}$. Here, the latent random variables include the parameters of model and the latent variables whose counterparts are the observations. We are going to compute $P(\mathbf Z|\mathbf X)$, the posterior, which is</p>
 <script type="math/tex; mode=display">
-p(\mathbf{Z}|\mathbf{X})=\frac{p(\mathbf{X}|\mathbf{Z})p(\mathbf{Z})}{\int p(\mathbf{X},\mathbf{Z})p(\mathbf{Z}) d\mathbf Z}</script><p>However, for many models, the denominator may not have a closed-form solution and the latent variable might be high dimensional. Therefore, we want to find an approximation $q(\mathbf{Z})$ of $p(\mathbf{Z}|\mathbf{X})$, such that $KL(q||p)$ is minimised. We assume $q(Z)$ a Gaussian distribution.</p>
+p(\mathbf{Z}|\mathbf{X})=\frac{p(\mathbf{X}|\mathbf{Z})p(\mathbf{Z})}{\int p(\mathbf{X},\mathbf{Z})p(\mathbf{Z}) d\mathbf Z}</script><p>However, for many models, the denominator may not have a closed-form solution and the latent variable might be high dimensional. Therefore, we want to find an approximation $q(\mathbf{Z})​$ of $p(\mathbf{Z}|\mathbf{X})​$, such that $KL(q||p)​$ is minimised. We assume $q(\mathbf Z)​$ a Gaussian distribution.</p>
 <script type="math/tex; mode=display">
 \begin{align}
 KL(q||p) &=KL(q(\mathbf{Z})||p(\mathbf Z|\mathbf X)) \\ 
@@ -580,7 +580,7 @@ q_j^* \propto \exp\left\{E_{-j}[\log p(\mathbf Z_j,\mathbf Z_{-j}, \mathbf X)]\r
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-count">1</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>

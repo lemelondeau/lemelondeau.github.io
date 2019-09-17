@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="Cool Site">
 <meta property="og:description" content="Notes of PRML and Machine Learning-A Probabilistic Prospective 1. Latent VariablesLatent variables, also called hidden variables or unobserved variables, are used in many probabolistic models to make">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2018-05-23T06:02:13.000Z">
+<meta property="og:updated_time" content="2019-09-17T12:41:40.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="The EM algorithm">
 <meta name="twitter:description" content="Notes of PRML and Machine Learning-A Probabilistic Prospective 1. Latent VariablesLatent variables, also called hidden variables or unobserved variables, are used in many probabolistic models to make">
@@ -391,17 +391,17 @@ p(\mathbf{X,Z|\pmb\theta})=\prod_{n=1}^N\prod_{k=1}^K\pi_k^{z_{nk}}\mathcal{N}(\
 <p>The expectation maximization algorithm, is a general technique for finding maximum likelihood solutions for probabilistic models having latent variables.</p>
 <p>Suppose that direct optimisation of $p(\mathbf{X}|\pmb{\theta})$ is difficult, but that optimisation of the complete-data likelihood function $p(\mathbf{X,Z|\pmb\theta})$ is significantly easier.</p>
 </blockquote>
-<p>To compute $p(\mathbf{X|\theta})=\int_{\mathbf Z} p(\mathbf{X,Z})$, the posterior distribution of $\mathbf Z$, $p(\mathbf{Z|X,\pmb\theta})$, is needed.</p>
+<p>To compute $p(\mathbf{X|\pmb\theta})=\sum_{\mathbf Z} p(\mathbf{Z})p(\mathbf{X,Z|\pmb\theta})$, the posterior distribution of $\mathbf Z$, $p(\mathbf{Z|X,\pmb\theta})$, is needed.</p>
 <blockquote>
 <p>Next introduce a distribution $q(\mathbf{Z})$ defined over the latent variable, which is supposed to be as close as possible to $p(\mathbf{Z|X,\pmb\theta})$.</p>
 </blockquote>
 <p>The following decomposition holds</p>
 <script type="math/tex; mode=display">
-\log p(\mathbf{X|\theta})=\mathcal{L}(q, \pmb{\theta})+\text{KL}(q||p)</script><p>where we have defined</p>
+\log p(\mathbf{X|\pmb\theta})=\mathcal{L}(q, \pmb{\theta})+\text{KL}(q||p)</script><p>where we have defined</p>
 <script type="math/tex; mode=display">
 \mathcal{L}(q,\pmb \theta)=\sum_{\mathbf Z}q(\mathbf Z)\log\left\{\frac{p(\mathbf{X,Z}|\pmb\theta)}{q(\mathbf{Z})}\right\} \\
 \text{KL}(q||p)= - \sum_{\mathbf{Z} }\log \left\{\frac{p(\mathbf{Z|X,\pmb\theta})}{q(\mathbf Z)}\right\}</script><p>Since $\text{KL}(q||p) \geq 0$, then $\log p(\mathbf{X|\pmb\theta}) \geq \mathcal{L}(q, \pmb{\theta})$. $\mathcal L$ is a lower bound of the log likelihood.</p>
-<p>Our aim is to maximize $\log p(\mathbf{X|\pmb\theta})$ hence $\mathcal L$ and there are two group of variables, $\mathbf Z$ and $\mathbf \theta$, to optimise.</p>
+<p>Our aim is to maximize $\log p(\mathbf{X|\pmb\theta})$ hence $\mathcal L$ and there are two group of variables, $\mathbf Z$ and $\pmb\theta$, to optimise.</p>
 <p>Suppose the current value of the parameter vector is $\pmb \theta^\text {old}$</p>
 <p><strong>E step:</strong> Fix $\pmb \theta^\text {old}$, maximize $\mathcal L$ w.r.t $q(\mathbf Z)$. <strong>Since $\pmb \theta^\text {old}$ is fixed,</strong> <strong>then $\log p(\mathbf{X|\pmb\theta})$ is fixed.</strong> The largest value of $\mathcal L$ will occur when $\text{KL}$ equals to zero. That means $q(\mathbf{Z})$ is equal to $p(\mathbf{Z|X},\pmb\theta^\text{old})$.</p>
 <p><strong>M step:</strong> Fix $q(\mathbf Z) = p(\mathbf{Z|X},\pmb\theta^\text{old})$, maximize $\mathcal L$ w.r.t $\pmb \theta$. </p>
@@ -625,7 +625,7 @@ p(\mathbf{Z|X},\pmb\theta)=\frac{p(\mathbf{Z},\mathbf{X}|\pmb\theta)}{\sum_\math
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

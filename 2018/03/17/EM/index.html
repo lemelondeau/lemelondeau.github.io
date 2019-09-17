@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="Cool Site">
 <meta property="og:description" content="Notes of PRML and Machine Learning-A Probabilistic Prospective 1. Latent VariablesLatent variables, also called hidden variables or unobserved variables, are used in many probabolistic models to make">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-09-17T12:41:40.000Z">
+<meta property="og:updated_time" content="2019-09-17T13:29:28.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="The EM algorithm">
 <meta name="twitter:description" content="Notes of PRML and Machine Learning-A Probabilistic Prospective 1. Latent VariablesLatent variables, also called hidden variables or unobserved variables, are used in many probabolistic models to make">
@@ -375,11 +375,11 @@ p(\mathbf{x,z})=p(\mathbf{x|z})p(\mathbf z)</script><p>The marginal distribution
 p(\mathbf{x})=\sum_\mathbf{z}p(\mathbf z)p(\mathbf{x|z})=\sum_{k=1}^K \pi_k \mathcal{N}(\textbf{x}|\mathbf{\mu}_k, \mathbf{\Sigma}_k)</script><p>We are now able to work with the joint distribution instead of the marginal distribution, and this will lead to significant simplification [1].</p>
 <h3 id="2-3-The-EM-Algorithm"><a href="#2-3-The-EM-Algorithm" class="headerlink" title="2.3 The EM Algorithm"></a>2.3 The EM Algorithm</h3><p>Denote all parameters by $\pmb{\theta}$, and the log likelihood function is given by</p>
 <script type="math/tex; mode=display">
-\log p(\mathbf{X|\pmb\theta})=\log \left\{\sum_{\mathbf{Z} }p(\mathbf{X,Z|\pmb\theta})\right\}</script><p>Now consider the joint distribution for GMM,</p>
+\log p(\mathbf{X|\pmb\theta})=\log \left\{\sum_{\mathbf{Z} } p(\mathbf{Z|\pmb\theta})p(\mathbf{X,Z|\pmb\theta})\right\}</script><p>Now consider the joint distribution for GMM,</p>
 <script type="math/tex; mode=display">
 p(\mathbf{X,Z|\pmb\theta})=\prod_{n=1}^N\prod_{k=1}^K\pi_k^{z_{nk}}\mathcal{N}(\mathbf{x}_n|\mathbf{\mu}_k,\mathbf{\Sigma}_k)^{z_{nk}}</script><p>where $z_{nk}$ denotes the $k^{\text{th}}$ components of $\mathbf{z}_n$. Taking the logarithm, we obtain</p>
 <script type="math/tex; mode=display">
-\log p(\mathbf{X,Z|\pmb\theta})=\sum_{n=1}^N\sum_{k=1}^K z_{nk} \{\log\pi_k+\log\mathcal{N}(\mathbf{x}_n|\mathbf{\mu}_k,\mathbf{\Sigma}_k)\}</script><p>The logarithm now acts directly on the Gaussian distribution. The  maximization with respect to a mean or a covariance is exactly for a single Gaussian.</p>
+\log p(\mathbf{X,Z|\pmb\theta})=\sum_{n=1}^N\sum_{k=1}^K z_{nk} \{\log\pi_k+\log\mathcal{N}(\mathbf{x}_n|\mathbf{\mu}_k,\mathbf{\Sigma}_k)\}</script><p>The logarithm now acts directly on the Gaussian distribution. The summation is out of the log. The  maximization with respect to a mean or a covariance is exactly for a single Gaussian.</p>
 <p>The EM algorithm is given as follows:</p>
 <p><strong>E step</strong>: find the expectation of the $\log p(\mathbf{X, Z}|\pmb\theta)$ over the posterior distribution of the latent variable</p>
 <script type="math/tex; mode=display">

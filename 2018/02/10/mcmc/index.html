@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="Cool Site">
 <meta property="og:description" content="1. Sample data from a distributionSometimes we need a set of data from a certain distribution, but the difficulty lies in this problem depends on the distribution we are going to sample from. Among al">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2018-02-10T15:09:44.000Z">
+<meta property="og:updated_time" content="2021-08-01T06:31:33.971Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Monte Carlo Sampling">
 <meta name="twitter:description" content="1. Sample data from a distributionSometimes we need a set of data from a certain distribution, but the difficulty lies in this problem depends on the distribution we are going to sample from. Among al">
@@ -350,7 +350,7 @@
       
 
       
-        <h2 id="1-Sample-data-from-a-distribution"><a href="#1-Sample-data-from-a-distribution" class="headerlink" title="1. Sample data from a distribution"></a>1. Sample data from a distribution</h2><p>Sometimes we need a set of data from a certain distribution, but the difficulty lies in this problem depends on the distribution we are going to sample from. Among all the distributions, the easiest one to sample from is uniform distribution $U(0,1)$. One thing worth noticing is most of the random generators generate pseudo random numbers rather than genuinely ones. Two commonly used methods are <strong><em>linear congruential generator</em></strong> (LCG) and <strong><em>multiplicative congruential generator</em></strong> (MCG):</p>
+        <h2 id="1-Sample-data-from-a-distribution"><a href="#1-Sample-data-from-a-distribution" class="headerlink" title="1. Sample data from a distribution"></a>1. Sample data from a distribution</h2><p>Sometimes we need a set of data from a certain distribution, but the difficulty lies in this problem depends on the distribution we are going to sample from. Among all the distributions, the easiest one to sample from is uniform distribution $U(0,1)$. One thing worth noticing is most of the random generators generate pseudo random numbers rather than genuine ones. Two commonly used methods are <strong><em>linear congruential generator</em></strong> (LCG) and <strong><em>multiplicative congruential generator</em></strong> (MCG):</p>
 <script type="math/tex; mode=display">
 \text{LCG:}\left\{
       \begin{array}{ll}
@@ -365,9 +365,9 @@
       \end{array}
 \right.</script><p>where $x_0$ is called the seed, $C$ is a non-negative integer and $r_i$ is the generated random number. For further information, please refer to <a href="http://statweb.stanford.edu/~owen/mc/Ch-unifrng.pdf" target="_blank" rel="external">this</a>.</p>
 <p>Now we have the random numbers from $U(0,1)$, how about other distributions? One well known method is <strong><em>inversion sampling</em></strong>.</p>
-<p>Given a distribution $P(X)$, here $X$ is a continuous variable, we know that the output range of its cumulative distribution function $C(X)$ is $[0, 1]$. If we sample a random number $u$ from $U(0, 1)$, there will be always an $x$ such that $C(x)=u$. Now, $x$ is a sample from $P(X)$. To compute $x$ from $u$, we need the inverse function $C^{-1}$.</p>
+<p>Given a distribution $P(X)$, here $X$ is a continuous variable, we know that the output range of its cumulative distribution function $C(X)$ is $[0, 1]$. If we sample a random number $u$ from $U(0, 1)$, there will be an $x$ such that $C(x)=u$. Now, $x$ is a sample from $P(X)$. To compute $x$ from $u$, we need the inverse function $C^{-1}$.</p>
 <script type="math/tex; mode=display">
-x=C^{-1}(u)</script><p>What if $F(X)​$ is not invertible or we don’t even have the formula of $P(X)​$? </p>
+x=C^{-1}(u)</script><p>What if $C(X)$ is not invertible or we don’t even have the formula of $P(X)$? </p>
 <h2 id="2-Monte-Carlo-sampling"><a href="#2-Monte-Carlo-sampling" class="headerlink" title="2. Monte Carlo sampling"></a>2. Monte Carlo sampling</h2><p>In this part, we assume $p(x)$ is known.</p>
 <h3 id="2-1-Rejection-sampling"><a href="#2-1-Rejection-sampling" class="headerlink" title="2.1 Rejection sampling"></a>2.1 Rejection sampling</h3><p>We want to sample data from a distribution $p(x)$, however, it is very difficult. Suppose we are lucky to have an easy-to-sample distribution $q(x)$, such that $kq(x) \geq p(x), k&gt;0$. $q(x)$ is called proposal distribution. What we are going to do is first sample a data $x_0$ from $q(x)$, and then sample $u_0$ from $U(0, kq(x_0))$. If $u_0&gt;p(x_0)$, the sample is rejected. This method is useful in one or two dimensions. [1]</p>
 <h3 id="2-2-Importance-sampling"><a href="#2-2-Importance-sampling" class="headerlink" title="2.2 Importance sampling"></a>2.2 Importance sampling</h3><p>Suppose we have an easy-to-sample proposal distribution $q(x)$, such that $q(x)&gt;0$ if $p(x)&gt;0$. Now, we want to get the expectation of $f(x)$.</p>
@@ -378,7 +378,7 @@ E[f]&=\int f(x)p(x)\text{d}x\\
 &\approx \frac1N\sum_n\frac{p(x_n)}{q(x_n)}q(x_n), x_n \sim q(x)
 \end{align}</script><p>$w_n=\frac{p(x_n)}{q(x_n)}$ is called <strong>importance weight</strong>. The above formula means sampling $f(x)$ from $p(x)$ is equivalent to sampling $f(x)w(x)$ from $q(x)$. All samples are retained, which is different from the reject sampling.</p>
 <h3 id="2-3-Metropolis-Sampling"><a href="#2-3-Metropolis-Sampling" class="headerlink" title="2.3 Metropolis Sampling"></a>2.3 Metropolis Sampling</h3><p>The idea of Metropolis sampling is quite simple: from an initial position $x_0$, apply random walks to propose the next position and decide whether to accept it. If the new position $x_{t+1}$ is more likely to be visited than $x_t$ under $p(x)$, that is $p(x_{t+1})\geq p(x_t)$, the proposed position is accepted. Otherwise, accept the proposed position with probability $p(x_{t+1})/p(x_t)$, set $x_{t+1}$ to $x_t$. For the random walks, a Gaussian distribution is usually used: $p(x_{t+1}|x_t)\sim \mathcal{N}(x_t, 1)$.</p>
-<p>I really hate some of the posts given the M-H algorithm (see section 2.4) first and say Metropolis sampling is a special case of it. Especially when they give the acceptance rate without further explanation, which makes me feel like I am the most stupid person in the world. </p>
+<p>I really hate some of the posts give the M-H algorithm (see section 2.4) first and say Metropolis sampling is a special case of it. Especially when they give the acceptance rate without further explanation, which makes me feel like I am the most stupid person in the world. </p>
 <p>FYI: The Metropolis algorithm was first proposed in 1953. It was then generalized by Hastings in 1970. [2]</p>
 <h3 id="2-4-Markov-Chain-Monte-Carlo-MCMC"><a href="#2-4-Markov-Chain-Monte-Carlo-MCMC" class="headerlink" title="2.4 Markov Chain Monte Carlo (MCMC)"></a>2.4 Markov Chain Monte Carlo (MCMC)</h3><p>What is not so good with Metropolis sampling? What is the intuition of MCMC?</p>
 <h3 id="2-4-1-Markov-Chain"><a href="#2-4-1-Markov-Chain" class="headerlink" title="2.4.1 Markov Chain"></a>2.4.1 Markov Chain</h3><p>For Markov Chain, there are $n$ states $x_1, x_2, … ,x_n$ and the state at time $t+1$ is conditional independent to other historical states given the state at time $t$</p>
@@ -392,13 +392,13 @@ p(x_{t+1}|x_t)</script><p>Starting form a certain state, we can get the distribu
 <script type="math/tex; mode=display">
 \pi(x^\prime)T(x\leftarrow x^\prime)=\pi(x)T(x^\prime \leftarrow x)</script><p>The above property is called <strong>detailed balance</strong> and we can prove the stationarity with this property:</p>
 <script type="math/tex; mode=display">
-\sum_{x^\prime}\pi(x^\prime)T(x\leftarrow x^\prime)=\sum_{x^\prime}\pi(x)T(x^\prime\leftarrow x)=\pi(x)</script><h3 id="2-4-2-Metropolis-Hastings-M-H-Algorithm"><a href="#2-4-2-Metropolis-Hastings-M-H-Algorithm" class="headerlink" title="2.4.2 Metropolis-Hastings (M-H) Algorithm"></a>2.4.2 Metropolis-Hastings (M-H) Algorithm</h3><p>M-H algorithm is one of the classical MCMC methods. In this section, we will see how to apply Markov Chain, especially it’s stationary property, to do sampling.</p>
+\sum_{x^\prime}\pi(x^\prime)T(x\leftarrow x^\prime)=\sum_{x^\prime}\pi(x)T(x^\prime\leftarrow x)=\pi(x)</script><h3 id="2-4-2-Metropolis-Hastings-M-H-Algorithm"><a href="#2-4-2-Metropolis-Hastings-M-H-Algorithm" class="headerlink" title="2.4.2 Metropolis-Hastings (M-H) Algorithm"></a>2.4.2 Metropolis-Hastings (M-H) Algorithm</h3><p>M-H algorithm is one of the classical MCMC methods. In this section, we will see how to apply Markov Chain, especially its stationary property, for sampling.</p>
 <p><strong>A Markov chain view of Metropolis sampling</strong></p>
-<p>Let’s say now we want to sampling from $\pi(x)$, we know that when it is stationary the next position $x_{t+1}$ we get by applying the transition function always has distribution $\pi(x)$. That means we can take $x_{t+1}$ as a sample of $\pi(x)$ ! Wow!</p>
+<p>Let’s say now we want to sample from $\pi(x)$, we know that when it is stationary the next position $x_{t+1}$ we get by applying the transition function always has distribution $\pi(x)$. That means we can take $x_{t+1}$ as a sample of $\pi(x)$ ! <strong>Wow!</strong></p>
 <p>Now our problem is that we don’t know the exact $T$. What can we do?</p>
 <p>Let’s look back at the Metropolis method in a Markov chain way. At position $x_t$, we want to know where will the next position be. In Markov chain, we get $x_{t+1}$ using $T(x_{t+1}\leftarrow x_t)$. In Metropolis method, there are two steps, first propose a new position using $Q(x_{t+1}\leftarrow x_t)$ and then decide whether to accept it using $A(x_{t+1}\leftarrow x_t)$. It’s now obvious that</p>
 <script type="math/tex; mode=display">
-T(x_{t+1}\leftarrow x_t)=Q(x_{t+1}\leftarrow x_t)A(x_{t+1}\leftarrow x_t)</script><p>And if $x_{t+1}=x_t$, there are two parts, one if the proposal is itself and another is when the proposal is rejected:</p>
+T(x_{t+1}\leftarrow x_t)=Q(x_{t+1}\leftarrow x_t)A(x_{t+1}\leftarrow x_t)</script><p>And if $x_{t+1}=x_t$, there are two parts, one part is the proposal is $x_t$ itself and another is when the proposal is rejected:</p>
 <script type="math/tex; mode=display">
 T(x_{t+1}\leftarrow x_t)=Q(x_{t+1}\leftarrow x_t)A(x_{t+1}\leftarrow x_t)+\sum_{x^\prime}Q(x^\prime\leftarrow x_t)(1-A(x^\prime\leftarrow x_t))</script><p>We can specify the proposal distribution, what we don’t have is the acceptance rate $A(x_{t+1}\leftarrow x_t)$. How can we get it?</p>
 <p><strong>Acceptance rate</strong></p>
@@ -427,11 +427,18 @@ A(x^\prime \leftarrow x)=\min(\frac{\pi(x^\prime)Q(x\leftarrow x^\prime)}{\pi(x)
 </ol>
 <p><strong>Burn-in</strong></p>
 <p>If the starting position is far from the dense area, it will take some time for the algorithm to reach the dense area (more representative of the distribution). Therefore, burn-in is needed.</p>
-<p>Two good videos are <a href="https://www.youtube.com/watch?v=sK3cg15g8FI&amp;list=LLT7nvYvSbuz8tuy5ZqcCVYQ" target="_blank" rel="external">Machine learning - Markov chain Monte Carlo (MCMC) II</a> and<a href="https://www.coursera.org/learn/bayesian-methods-in-machine-learning/lecture/hnzut/metropolis-hastings" target="_blank" rel="external">Metropolis-Hastings</a>.</p>
+<p>Two good videos are <a href="https://www.youtube.com/watch?v=sK3cg15g8FI&amp;list=LLT7nvYvSbuz8tuy5ZqcCVYQ" target="_blank" rel="external">Machine learning - Markov chain Monte Carlo (MCMC) II</a> and <a href="https://www.coursera.org/learn/bayesian-methods-in-machine-learning/lecture/hnzut/metropolis-hastings" target="_blank" rel="external">Metropolis-Hastings</a>.</p>
 <h2 id="3-Approximate-Inference"><a href="#3-Approximate-Inference" class="headerlink" title="3. Approximate Inference"></a>3. Approximate Inference</h2><p>In practice, we usually want to sample from a distribution whose formula is unknown. The most common one is posterior $p(\theta|D)$.</p>
 <script type="math/tex; mode=display">
 p(\theta|D)=\frac{p(D|\theta)p(\theta)}{p(D)}</script><p>Usually, $p(D)=\int p(D|\theta)p(\theta)\text{d}\theta $ is intractable, how are we going to deal with this?</p>
-<p>Notice that $p(D)$ is a constant and we are taking division so it doesn’t matter what it would be! This makes MCMC a powerful method for approximating posterior distributions.</p>
+<p>Notice that $p(D)$ is a constant and we are taking division so it doesn’t matter what it would be! This makes MCMC a powerful method for approximating posterior distributions. </p>
+<p><strong>The algorithm</strong></p>
+<ol>
+<li>initialize $\pi$, $\theta$</li>
+<li>propose $\theta^\prime$ and compute $p(D|\theta^\prime)p(\theta^\prime)$</li>
+<li>accept/reject based on Metropolis rules</li>
+<li>keep jumping</li>
+</ol>
 <h1 id="References"><a href="#References" class="headerlink" title="References"></a>References</h1><p>​    [1]. <a href="http://www.mit.edu/~9.520/spring10/Classes/class21_mcmc_2010.pdf" target="_blank" rel="external">http://www.mit.edu/~9.520/spring10/Classes/class21_mcmc_2010.pdf</a></p>
 <p>​    [2]. <a href="https://www.sheffield.ac.uk/polopoly_fs/1.60510!/file/MCMC.pdf\" target="_blank" rel="external">https://www.sheffield.ac.uk/polopoly_fs/1.60510!/file/MCMC.pdf\</a></p>
 <p>​    [3]. <a href="http://www.maths.nuigalway.ie/~dane/Friel.pdf" target="_blank" rel="external">http://www.maths.nuigalway.ie/~dane/Friel.pdf</a></p>
@@ -645,7 +652,7 @@ p(\theta|D)=\frac{p(D|\theta)p(\theta)}{p(D)}</script><p>Usually, $p(D)=\int p(D
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

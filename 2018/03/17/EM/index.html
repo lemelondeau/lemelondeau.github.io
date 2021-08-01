@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="Cool Site">
 <meta property="og:description" content="Notes of PRML and Machine Learning-A Probabilistic Prospective 1. Latent VariablesLatent variables, also called hidden variables or unobserved variables, are used in many probabolistic models to make">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-09-17T13:29:28.000Z">
+<meta property="og:updated_time" content="2020-10-28T06:11:03.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="The EM algorithm">
 <meta name="twitter:description" content="Notes of PRML and Machine Learning-A Probabilistic Prospective 1. Latent VariablesLatent variables, also called hidden variables or unobserved variables, are used in many probabolistic models to make">
@@ -391,7 +391,7 @@ p(\mathbf{X,Z|\pmb\theta})=\prod_{n=1}^N\prod_{k=1}^K\pi_k^{z_{nk}}\mathcal{N}(\
 <p>The expectation maximization algorithm, is a general technique for finding maximum likelihood solutions for probabilistic models having latent variables.</p>
 <p>Suppose that direct optimisation of $p(\mathbf{X}|\pmb{\theta})$ is difficult, but that optimisation of the complete-data likelihood function $p(\mathbf{X,Z|\pmb\theta})$ is significantly easier.</p>
 </blockquote>
-<p>To compute $p(\mathbf{X|\pmb\theta})=\sum_{\mathbf Z} p(\mathbf{Z})p(\mathbf{X,Z|\pmb\theta})$, the posterior distribution of $\mathbf Z$, $p(\mathbf{Z|X,\pmb\theta})$, is needed.</p>
+<p>To compute $p(\mathbf{X|\pmb\theta})=\sum_{\mathbf Z}p(\mathbf{X,Z|\pmb\theta})$, the posterior distribution of $\mathbf Z$, $p(\mathbf{Z|X,\pmb\theta})$, is needed.</p>
 <blockquote>
 <p>Next introduce a distribution $q(\mathbf{Z})$ defined over the latent variable, which is supposed to be as close as possible to $p(\mathbf{Z|X,\pmb\theta})$.</p>
 </blockquote>
@@ -625,7 +625,7 @@ p(\mathbf{Z|X},\pmb\theta)=\frac{p(\mathbf{Z},\mathbf{X}|\pmb\theta)}{\sum_\math
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

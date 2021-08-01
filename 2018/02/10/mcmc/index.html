@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="Cool Site">
 <meta property="og:description" content="1. Sample data from a distributionSometimes we need a set of data from a certain distribution, but the difficulty lies in this problem depends on the distribution we are going to sample from. Among al">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2021-08-01T06:31:33.971Z">
+<meta property="og:updated_time" content="2021-08-01T07:13:55.066Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Monte Carlo Sampling">
 <meta name="twitter:description" content="1. Sample data from a distributionSometimes we need a set of data from a certain distribution, but the difficulty lies in this problem depends on the distribution we are going to sample from. Among al">
@@ -375,7 +375,7 @@ x=C^{-1}(u)</script><p>What if $C(X)$ is not invertible or we don’t even have 
 \begin{align}
 E[f]&=\int f(x)p(x)\text{d}x\\
 &=\int f(x)\frac{p(x)}{q(x)}q(x)\text{d}x\\
-&\approx \frac1N\sum_n\frac{p(x_n)}{q(x_n)}q(x_n), x_n \sim q(x)
+&\approx \frac1N\sum_n\frac{p(x_n)}{q(x_n)}f(x_n), x_n \sim q(x)
 \end{align}</script><p>$w_n=\frac{p(x_n)}{q(x_n)}$ is called <strong>importance weight</strong>. The above formula means sampling $f(x)$ from $p(x)$ is equivalent to sampling $f(x)w(x)$ from $q(x)$. All samples are retained, which is different from the reject sampling.</p>
 <h3 id="2-3-Metropolis-Sampling"><a href="#2-3-Metropolis-Sampling" class="headerlink" title="2.3 Metropolis Sampling"></a>2.3 Metropolis Sampling</h3><p>The idea of Metropolis sampling is quite simple: from an initial position $x_0$, apply random walks to propose the next position and decide whether to accept it. If the new position $x_{t+1}$ is more likely to be visited than $x_t$ under $p(x)$, that is $p(x_{t+1})\geq p(x_t)$, the proposed position is accepted. Otherwise, accept the proposed position with probability $p(x_{t+1})/p(x_t)$, set $x_{t+1}$ to $x_t$. For the random walks, a Gaussian distribution is usually used: $p(x_{t+1}|x_t)\sim \mathcal{N}(x_t, 1)$.</p>
 <p>I really hate some of the posts give the M-H algorithm (see section 2.4) first and say Metropolis sampling is a special case of it. Especially when they give the acceptance rate without further explanation, which makes me feel like I am the most stupid person in the world. </p>
